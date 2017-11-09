@@ -1,0 +1,7 @@
+man-roxygen
+.git
+.sh$
+^.git.*
+\.o$
+\.so$
+.md

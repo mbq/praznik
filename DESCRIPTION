@@ -1,0 +1,14 @@
+Package: praznik
+Type: Package
+Title: Collection of information-based feature selection filters
+Version: 0.9.0
+Author: Miron B. Kursa
+Maintainer: Miron B. Kursa <M.Kursa@icm.edu.pl>
+License: GPL-3
+Description: A collection of feature selection methods inspired by the FEAST library.
+ Provides efficient implementations of several information-based filter methods, including CMIM, DISR, JMI, JMIM and mRMR.
+BugReports: https://github.com/mbq/praznik/issues
+URL: https://github.com/mbq/praznik
+RoxygenNote: 6.0.1
+Suggests: 
+    testthat
