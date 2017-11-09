@@ -18,7 +18,6 @@ MIM<-function(X,Y,k=3){
 #' \deqn{J(X)=\min_{W\in S} I(X;Y|W),}
 #' where \eqn{S} is the set of already selected attributes.
 #' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
-#'
 #' @note CMIM is identical to the Informative Fragments (IF) method.
 #' @references "Fast Binary Feature Selection using Conditional Mutual Information Maximisation" F. Fleuret, JMLR (2004)
 #' @references "Object recognition with informative features and linear classification" M. Vidal-Naquet and S. Ullman, IEEE Conference on Computer Vision and Pattern Recognition (2003).
@@ -118,6 +117,7 @@ MI<-function(X,Y){
 #'
 #' @note \code{\link{NJMIM}} is a normalised version of JMIM; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
 #' @template generic
+#' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
 JMIM<-function(X,Y,k=3){
  .Call(C_JMIM,X,Y,as.integer(k))->ans
@@ -136,6 +136,7 @@ JMIM<-function(X,Y,k=3){
 #'
 #' @note NJMIM is a normalised version of \code{\link{JMIM}}; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
 #' @template generic
+#' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
 NJMIM<-function(X,Y,k=3){
  .Call(C_NJMIM,X,Y,as.integer(k))->ans
