@@ -1,6 +1,6 @@
 Package: praznik
 Type: Package
-Title: Collection of information-based feature selection filters
+Title: Collection of Information-Based Feature Selection Filters
 Version: 0.9.0
 Author: Miron B. Kursa
 Maintainer: Miron B. Kursa <M.Kursa@icm.edu.pl>
