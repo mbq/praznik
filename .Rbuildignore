@@ -5,3 +5,4 @@ man-roxygen
 \.o$
 \.so$
 .md
+.travis.yml
