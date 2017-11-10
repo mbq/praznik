@@ -68,6 +68,33 @@ uint32_t static inline fillHt(struct ht *Q,int N,int nA,int *a,int nB,int *b,int
  return(nAB);
 }
 
+uint32_t static inline fillHtOne(struct ht *Q,int N,int *in,int *out,int mixOff){
+ //Zero HT
+ uint32_t nAB=0;
+ for(int e=0;e<N;e++) Q->map[e]=NULL;
+ 
+ //Fill HT
+ for(int e=0;e<N;e++){
+  if(in[e]==NA_INTEGER) error("NA values are not allowed");
+  uint64_t _ab=(uint64_t)(in[e]);
+  uint32_t hab=_ab%N;//TOOD: Better hash?
+
+  struct hte **E=Q->map+hab;
+  for(;E[0] && E[0]->ab!=_ab;E=&(E[0]->nxt));
+
+  if(!E[0]){
+   //Empty cell found
+   Q->cnt[nAB].ab=_ab;
+   Q->cnt[nAB].nxt=NULL;
+   E[0]=Q->cnt+nAB;
+   nAB++;
+  }
+  out[e]=(E[0]-Q->cnt)+mixOff;
+ }
+ return(nAB);
+}
+
+
 double miHt(struct ht *Q,int *cA,int *cB){
  double ans=0.;
  double N=Q->N;

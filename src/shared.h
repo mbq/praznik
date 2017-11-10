@@ -1,41 +1,67 @@
+int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
+ int lc=length(getAttrib(in,R_LevelsSymbol)),*out;
+ if(isFactor(in) && lc<n){
+  //Well-behaving factor; user shall give us such for optimal performance
+  *nout=lc;
+  out=INTEGER(in);
+  for(int e=0;e<n;e++)
+   if(out[e]==NA_INTEGER) error("NA values are not allowed");
+  return(out);
+ }
+ if(isFactor(in)||isLogical(in)||isInteger(in)){
+  //Integer-alike which needs collapsing into 1..n_levels
+  int *out=(int*)R_alloc(sizeof(int),n);
+  *nout=fillHtOne(ht,n,INTEGER(in),out,1);
+  return(out);
+ }
+ if(isReal(in)){
+  //Magically make discrete by scattering into 10-bins
+  double *x=REAL(in),min=INFINITY,max=-INFINITY;
+  for(int e=0;e<n;e++){
+   if(!R_FINITE(x[e])) error("Non-finite numeric values are not allowed");
+   min=min<x[e]?min:x[e];
+   max=max>x[e]?max:x[e];
+  }
+  int *out=(int*)R_alloc(sizeof(int),n);
+  if(n<6){
+   *nout=2;
+  }else if(n>30){
+   *nout=10;
+  }else{
+   *nout=n/3;
+  }
+  for(int e=0;e<n;e++)
+   out[e]=((int)((x[e]-min)/(max-min)*(double)(*nout)))%(*nout)+1;
+  return(out);
+ }
+ //Other stuff
+ return(NULL);
+}
+
 void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx){
- //X must be a factor data frame, Y must be a factor
+ if(!isFrame(X)) error("X must be a data.frame");
  *n=length(Y);
  *k=INTEGER(K)[0];
  *m=length(X);
 
- if(*k>*m) error("Parameter k must be smaller than the number of attributes");
+ if(*k>*m) error("Parameter k must be at most the number of attributes");
  if(*k<1) error("Parameter k must be positive");
- //TODO: Resolve this:
- //if(n[0]>=(1<<33)) error("Only at most 2^32 (4.2 billion) objects allowed");
+ if(n[0]>2147483648) error("Only at most 2^31 (2.1 billion) objects allowed");
  //TODO: Also eat matrices? --> then fix it
  if(*n!=length(VECTOR_ELT(X,0))) error("X and Y size mismatch");
 
  *ht=R_allocHt(*n);
 
- if(!isFactor(Y)) error("Y has to be a factor");
- *ny=length(getAttrib(Y,R_LevelsSymbol));
- if(*ny<*n){
-  *y=INTEGER(Y);
- }else{
-  *y=(int*)R_alloc(sizeof(int),*n);
-  *ny=fillHt(*ht,*n,*ny,INTEGER(Y),0,NULL,*y,NULL,NULL,1);
- }
-
+  *y=convertSEXP(*ht,*n,Y,ny);
+  if(!*y) error("Wrong Y type");
+ 
  *nx=(int*)R_alloc(sizeof(int),*m);
  *x=(int**)R_alloc(sizeof(int*),*m);
  for(int e=0;e<*m;e++){
   SEXP XX;
   PROTECT(XX=VECTOR_ELT(X,e));
-  //TODO: Auto-cut numerics into 10-bin
-  if(!isFactor(XX)) error("All X columns must be factor!");
-  (*nx)[e]=length(getAttrib(XX,R_LevelsSymbol));
-  if((*nx)[e]<*n){
-   (*x)[e]=INTEGER(XX);
-  }else{
-   (*x)[e]=(int*)R_alloc(sizeof(int),*n);
-   (*nx)[e]=fillHt(*ht,*n,(*nx)[e],INTEGER(XX),0,NULL,(*x)[e],NULL,NULL,1);
-  }
+  (*x)[e]=convertSEXP(*ht,*n,XX,(*nx)+e);
+  if(!(*x)[e]) error("Wrong X[,%d] type",e+1);
   UNPROTECT(1);
  }
 }
