@@ -39,11 +39,14 @@ test_that("X must be only reals, booleans, integers or factors",{
 test_that("NAs and other quirks are caught",{
  Y<-iris$Species; Y[3]<-NA
  X<-iris[,-5]; X[12,3]<-NA
- expect_error(MIM(X,Y,1))
+ expect_error(MIM(X,iris$Species,1),"Non-finite numeric values are not allowed")
  X[12,3]<-Inf
- expect_error(MIM(X,Y,1))
+ expect_error(MIM(X,iris$Species,1),"Non-finite numeric values are not allowed")
  X[12,3]<-NaN
- expect_error(MIM(X,Y,1))
+ expect_error(MIM(X,iris$Species,1),"Non-finite numeric values are not allowed")
  X<-iris[,"Species",drop=FALSE]; X[17,1]<-NA
- expect_error(MIM(X,Y,1))
+ expect_error(MIM(X,iris$Species,1),"NA values are not allowed")
+ X<-iris[,"Species",drop=FALSE]
+ X[,1]<-as.integer(X[,1]); X[17,1]<-NA
+ expect_error(MIM(X,iris$Species,1),"NA values are not allowed")
 })
