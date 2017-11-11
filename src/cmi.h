@@ -40,7 +40,7 @@ SEXP C_CMI(SEXP X,SEXP Y,SEXP K){
     ISWAP(bz,cz);
    }
   }
-  if(bs==0.) break; //Won't be anymore hits
+  if(bs<EPS) break; //Won't be anymore hits
   _score[_k]=bs; _idx[_k]=bi+1; _k++;
   nyz=nbyz; nz=nbz;
   x[bi]=NULL;

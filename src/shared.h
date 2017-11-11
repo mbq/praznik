@@ -97,4 +97,4 @@ SEXP makeAns(int k,double **score,int **idx){
 //Macros
 
 #define ISWAP(x,y) do{int *__tmp=x;x=y;y=__tmp;}while(0)
-
+#define EPS 1e-10

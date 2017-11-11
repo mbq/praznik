@@ -14,7 +14,9 @@ test_that("crazy attributes work",{
   badfactor=badfactor
  )->X
  factor(rep(letters[1:2],each=7))->Y
- expect_equal(MIM(X,Y,3)$selection,c("bool","int","badfactor"))
+ MIM(X,Y,3)->S
+ expect_equal(sort(S$selection),sort(c("bool","int","badfactor")))
+ expect_equal(S$score,rep(S$score[1],3))
 })
 
 test_that("X must be a data.frame",{
