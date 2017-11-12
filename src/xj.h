@@ -6,7 +6,7 @@ SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct
  struct ht *ht;
  prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
 
- double bs=0.; int *cY,*ctmp,bi;
+ double bs=0.; int *cY,*ctmp,bi=0;
  initialMiScan(ht,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi);
  if(bs==0) return(makeAns(0,NULL,NULL));
 
