@@ -61,6 +61,22 @@ MRMR<-function(X,Y,k=3){
  return(ans)
 }
 
+#' Greedy conditional mutual information maximisation filter
+#'
+#' In each round, the method selects attribute of a maximal conditional mutual information with the decision given all the previously selected attributes. 
+#' It stops either when \code{k} attributes have been selected or when the said criterion reaches zero, whatever comes first.
+#' Hence, it may return some attributes but less then \code{k}.
+#'
+#' @note In theory, most other methods in praznik are approximations of this method -- they often work better, though, as in practice conditional mutual information is hardly estimable.
+#' @template generic
+#' @export
+CMI<-function(X,Y,k=3){
+ .Call(C_CMI,X,Y,as.integer(k))->ans
+ names(ans)<-c("selection","scores")
+ ans$selection<-colnames(X)[ans$selection]
+ return(ans)
+}
+
 #' Joint mutual information filter
 #'
 #' The method starts with an attribute of a maximal mutual information with the decision \eqn{Y}.

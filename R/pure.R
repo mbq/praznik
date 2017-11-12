@@ -103,6 +103,26 @@ pureNJMIM<-function(X,Y,k=3){
  )
 }
 
+pureCMI<-function(X,Y,k=3){
+ X<-data.frame(X)
+ S<-factor(rep(1,nrow(X)))
+ selection<-c()
+ ascores<-c()
+ for(e in 1:k){
+  apply(X,2,cmutinfo,Y,S)->scores
+  if(max(scores)==0) break
+  sel<-names(which.max(scores))
+  selection<-c(selection,sel)
+  ascores<-c(ascores,max(scores))
+  S<-mergef(S,factor(X[,sel]))
+  X[,colnames(X)!=sel,drop=FALSE]->X
+ }
+ list(
+  selection=selection,
+  scores=setNames(ascores,NULL)
+ )
+}
+
 pureJMI<-function(X,Y,k=3){
  X<-data.frame(X)
  ascores<-apply(X,2,mutinfo,Y)
