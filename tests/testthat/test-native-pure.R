@@ -28,7 +28,7 @@ fuzz<-function(algo,seed){
 }
 
 for(seed in 1:5)
- for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMI","CMIM","MRMR"))
+ for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMIM","MRMR"))
   fuzz(algo,seed)
 
 
