@@ -5,7 +5,7 @@ SEXP C_MRMR(SEXP X,SEXP Y,SEXP K){
  prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
 
  double bs=0.,*rels=(double*)R_alloc(sizeof(double),m);
- int bi,*ctmp,*ctmp2;
+ int bi=0,*ctmp,*ctmp2;
  initialMiScan(ht,n,m,y,ny,x,nx,&ctmp,&ctmp2,rels,&bs,&bi);
  if(bs==0) return(makeAns(0,NULL,NULL));
  

@@ -15,7 +15,6 @@
 
 //Algorithms
 
-#include "cmi.h"
 #include "cmim.h"
 #include "mi.h"
 #include "mim.h"
@@ -35,7 +34,6 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_getNmi,2),
  CALLDEF(C_MI,3),
  CALLDEF(C_CMIM,3),
- CALLDEF(C_CMI,3),
  CALLDEF(C_JMI,3),
  CALLDEF(C_DISR,3),
  CALLDEF(C_JMIM,3),

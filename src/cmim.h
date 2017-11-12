@@ -5,7 +5,7 @@ SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
  struct ht *ht;
  prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
 
- double bs=0.; int bi,*cY,*ctmp;
+ double bs=0.; int bi=0,*cY,*ctmp;
  initialMiScan(ht,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi);
  if(bs==0) return(makeAns(0,NULL,NULL));
  
