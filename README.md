@@ -2,7 +2,7 @@
 Praznik is an R package containing a collection of information-based, feature selection filter methods.
 It provides efficient implementations of several information-based filter methods, including CMIM, DISR, JMI, JMIM and mRMR.
 
-Eventually, it should be available as a CRAN package; for now, you can easily install with:
+You can install from [CRAN](https://cran.r-project.org/package=praznik), or directly from GitHub with:
 
 ```r
 devtools::install_github('mbq/praznik')
