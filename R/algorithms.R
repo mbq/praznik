@@ -104,7 +104,7 @@ DISR<-function(X,Y,k=3){
 }
 
 MI<-function(X,Y){
- .Call(C_MI,X,Y,0L)->ans
+ .Call(C_MI,X,Y,7L)->ans
  names(ans)<-colnames(X)
  return(ans)
 }
