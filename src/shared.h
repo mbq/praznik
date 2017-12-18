@@ -23,6 +23,13 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
    max=max>x[e]?max:x[e];
   }
   int *out=(int*)R_alloc(sizeof(int),n);
+  if(max==min){
+   //Real value is almost constant
+   *nout=1;
+   for(int e=0;e<n;e++)
+    out[e]=1;
+   return(out);
+  }
   if(n<6){
    *nout=2;
   }else if(n>30){

@@ -23,6 +23,13 @@ test_that("X must be a data.frame",{
  expect_error(MIM(list(1:3),NULL,NULL),"X must be a data.frame")
 })
 
+test_that("Constant real features work",{
+ #Throws segfault in 1.0.0
+ MIM(data.frame(a=rep(1,150)),iris$Species,1)->ans
+ expect_equal(ans$selection,"a")
+ expect_equal(ans$scores,0)
+})
+
 test_that("X must be only reals, booleans, integers or factors",{
  Y<-c(TRUE,TRUE,FALSE,FALSE,FALSE)
  li<-data.frame(A=1:5)
