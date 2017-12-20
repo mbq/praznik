@@ -80,19 +80,25 @@ void static inline initialMiScan(struct ht* ht0,int n,int m,int *y,int ny,int **
  int *cXc=(int*)R_alloc(sizeof(int),n*nt); if(_cX) *_cX=cXc;
  int *cYc=(int*)R_alloc(sizeof(int),n*nt); if(_cY) *_cY=cYc;
  struct ht *hta[nt]; hta[0]=ht0;
- for(int e=1;e<nt;e++) hta[e]=R_allocHt(n);
- *bs=0.;
- #pragma omp parallel for
- for(int e=0;e<m;e++){
-  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n);
+ for(int e=1;e<nt;e++)
+  hta[e]=R_allocHt(n);
+ #pragma omp parallel 
+ {
+  double tbs=0.;
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0,tbi;
   struct ht *ht=hta[tn]; 
-  fillHt(ht,n,ny,y,nx[e],x[e],NULL,cY,cX,0);
-  double mi=miHt(ht,cY,cX);
-  if(_mi) _mi[e]=mi;
+  #pragma omp for
+  for(int e=0;e<m;e++){
+   fillHt(ht,n,ny,y,nx[e],x[e],NULL,madeCy?NULL:cY,cX,0); madeCy=1;
+   double mi=miHt(ht,cY,cX); _mi?_mi[e]=mi:0;
+   if(mi>tbs){
+    tbs=mi; tbi=e;
+   }
+  }
   #pragma omp critical
-  if(mi>*bs){
-   *bs=mi;
-   *bi=e;
+  if(tbs>*bs){
+   *bs=tbs;
+   *bi=tbi;
   }
  }
 }
