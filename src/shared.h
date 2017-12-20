@@ -1,3 +1,5 @@
+#include <omp.h>
+
 int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
  int lc=length(getAttrib(in,R_LevelsSymbol)),*out;
  if(isFactor(in) && lc<n){
@@ -73,14 +75,21 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int *
  }
 }
 
-void static inline initialMiScan(struct ht* ht,int n,int m,int *y,int ny,int **x,int *nx,int **_cY,int **_cX,double *_mi,double *bs,int *bi){
- int *cX=(int*)R_alloc(sizeof(int),n); if(_cX) *_cX=cX;
- int *cY=(int*)R_alloc(sizeof(int),n); if(_cY) *_cY=cY;
+void static inline initialMiScan(struct ht* ht0,int n,int m,int *y,int ny,int **x,int *nx,int **_cY,int **_cX,double *_mi,double *bs,int *bi){
+ int nt=omp_get_max_threads();
+ int *cXc=(int*)R_alloc(sizeof(int),n*nt); if(_cX) *_cX=cXc;
+ int *cYc=(int*)R_alloc(sizeof(int),n*nt); if(_cY) *_cY=cYc;
+ struct ht *hta[nt]; hta[0]=ht0;
+ for(int e=1;e<nt;e++) hta[e]=R_allocHt(n);
  *bs=0.;
+ #pragma omp parallel for
  for(int e=0;e<m;e++){
-  fillHt(ht,n,ny,y,nx[e],x[e],NULL,e?NULL:cY,cX,0);
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n);
+  struct ht *ht=hta[tn]; 
+  fillHt(ht,n,ny,y,nx[e],x[e],NULL,cY,cX,0);
   double mi=miHt(ht,cY,cX);
   if(_mi) _mi[e]=mi;
+  #pragma omp critical
   if(mi>*bs){
    *bs=mi;
    *bi=e;
