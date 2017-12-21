@@ -20,7 +20,7 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  { 
   int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0;
   struct ht *ht=hta[tn];
-  #pragma omp parallel for
+  #pragma omp for
   for(int e=0;e<m;e++){
    fillHt(ht,n,ny,y,nx[e],x[e],NULL,madeCy?NULL:cY,cX,0);
    mi[e]=miHt(ht,cY,cX);
