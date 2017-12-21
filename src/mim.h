@@ -6,7 +6,7 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  for(int e=1;e<nt;e++) hta[e]=R_allocHt(n);
  int *cXc=(int*)R_alloc(sizeof(int),n*nt);
  int *cYc=(int*)R_alloc(sizeof(int),n*nt);
- double *mi=(double*)R_alloc(sizeof(double),n);
+ double *mi=(double*)R_alloc(sizeof(double),m);
 
  double *score;
  int *idx;
