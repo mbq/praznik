@@ -3,7 +3,6 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  int n,k,m,ny,*y,*nx,**x;
  struct ht *hta[nt];
  prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx,nt);
- for(int e=1;e<nt;e++) hta[e]=R_allocHt(n);
  int *cXc=(int*)R_alloc(sizeof(int),n*nt);
  int *cYc=(int*)R_alloc(sizeof(int),n*nt);
  double *mi=(double*)R_alloc(sizeof(double),m);
@@ -18,11 +17,11 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
 
  #pragma omp parallel
  { 
-  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0;
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),dy=0;
   struct ht *ht=hta[tn];
   #pragma omp for
   for(int e=0;e<m;e++){
-   fillHt(ht,n,ny,y,nx[e],x[e],NULL,madeCy?NULL:cY,cX,0);
+   fillHt(ht,n,ny,y,nx[e],x[e],NULL,dy?NULL:cY,cX,0); dy=1;
    mi[e]=miHt(ht,cY,cX);
   }
  }
