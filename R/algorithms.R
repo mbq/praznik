@@ -151,3 +151,16 @@ NJMIM<-function(X,Y,k=3){
  return(ans)
 }
 
+#' Control OpenMP thread count
+#'
+#' The method executes the \code{omp_set_num_threads} function, allowing to override the number of threads spawned by the later executed OpenMP code, including the praznik filters.
+#' By default, all the logical cores will be used, thus this function is only useful to limit this number.
+#' @param threads Number of threads to use.
+#' @return Invisible \code{NULL}.
+#' @note This function is the same as provided by the \code{OpenMPController} package.
+#' You can also control OpenMP code by using environment variables, in particular \code{OMP_NUM_THREADS}.
+#' @export
+setOmpThreads<-function(threads){
+ .Call(C_setOmpThreads,as.integer(threads)[1])
+ return(invisible(NULL))
+}
