@@ -1,7 +1,7 @@
 SEXP C_MI(SEXP X,SEXP Y,SEXP K){
  int n,k,m,ny,*y,*nx,**x;
  struct ht *ht;
- prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
+ prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx,1);
 
  int *cX=(int*)R_alloc(sizeof(int),n);
  int *cY=(int*)R_alloc(sizeof(int),n);

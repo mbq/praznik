@@ -2,12 +2,14 @@
 //TODO: Use Fleuret's trick to speed it up
 SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
  int n,k,m,ny,*y,*nx,**x;
- struct ht *ht;
- prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
+ int nt=omp_get_max_threads();
+ struct ht *hta[nt];
+ prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx,nt);
 
  double bs=0.; int bi=0,*cY,*ctmp;
- initialMiScan(ht,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi);
+ initialMiScan(hta,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi,nt);
  if(bs==0) return(makeAns(0,NULL,NULL));
+ struct ht *ht=hta[0];
  
  //Save selected X as W and discard from further consideration
  int* w=x[bi],nw=nx[bi]; x[bi]=NULL;

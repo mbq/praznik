@@ -2,7 +2,7 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  int nt=omp_get_max_threads();
  int n,k,m,ny,*y,*nx,**x;
  struct ht *hta[nt];
- prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx);
+ prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx,nt);
  for(int e=1;e<nt;e++) hta[e]=R_allocHt(n);
  int *cXc=(int*)R_alloc(sizeof(int),n*nt);
  int *cYc=(int*)R_alloc(sizeof(int),n*nt);

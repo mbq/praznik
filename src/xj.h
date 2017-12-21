@@ -2,13 +2,15 @@
 
 enum xjm {xjmAccumulate,xjmMinimum};
 SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct ht*,int*,int*)){
+ int nt=omp_get_max_threads();
  int n,k,m,ny,*y,*nx,**x;
- struct ht *ht;
- prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
+ struct ht *hta[nt];
+ prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx,nt);
 
  double bs=0.; int *cY,*ctmp,bi=0;
- initialMiScan(ht,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi);
+ initialMiScan(hta,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi,nt);
  if(bs==0) return(makeAns(0,NULL,NULL));
+ struct ht *ht=hta[0];
 
  //Save selected X as W and discard from further consideration
  int* w=x[bi],nw=nx[bi]; x[bi]=NULL;

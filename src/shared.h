@@ -45,7 +45,7 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
  return(NULL);
 }
 
-void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx){
+void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx,int nt){
  if(!isFrame(X)) error("X must be a data.frame");
  *n=length(Y);
  *k=INTEGER(K)[0];
@@ -57,10 +57,11 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int *
  //TODO: Also eat matrices? --> then fix it
  if(*n!=length(VECTOR_ELT(X,0))) error("X and Y size mismatch");
 
- *ht=R_allocHt(*n);
+ for(int e=0;e<nt;e++)
+  ht[e]=R_allocHt(*n);
 
-  *y=convertSEXP(*ht,*n,Y,ny);
-  if(!*y) error("Wrong Y type");
+ *y=convertSEXP(*ht,*n,Y,ny);
+ if(!*y) error("Wrong Y type");
  
  *nx=(int*)R_alloc(sizeof(int),*m);
  *x=(int**)R_alloc(sizeof(int*),*m);
@@ -73,17 +74,14 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int *
  }
 }
 
-void static inline initialMiScan(struct ht* ht0,int n,int m,int *y,int ny,int **x,int *nx,int **_cY,int **_cX,double *_mi,double *bs,int *bi){
- int nt=omp_get_max_threads();
+void static inline initialMiScan(struct ht **hta,int n,int m,int *y,int ny,int **x,int *nx,int **_cY,int **_cX,double *_mi,double *bs,int *bi,int nt){
  int *cXc=(int*)R_alloc(sizeof(int),n*nt); if(_cX) *_cX=cXc;
  int *cYc=(int*)R_alloc(sizeof(int),n*nt); if(_cY) *_cY=cYc;
- struct ht *hta[nt]; hta[0]=ht0;
- for(int e=1;e<nt;e++)
-  hta[e]=R_allocHt(n);
+
  #pragma omp parallel 
  {
   double tbs=0.;
-  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0,tbi;
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0,tbi=-1;
   struct ht *ht=hta[tn]; 
   #pragma omp for
   for(int e=0;e<m;e++){
