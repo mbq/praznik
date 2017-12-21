@@ -1,11 +1,13 @@
 SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
+ int nt=omp_get_max_threads();
  int n,k,m,ny,*y,*nx,**x;
- struct ht *ht;
- prepareInput(X,Y,K,&ht,&n,&m,&k,&y,&ny,&x,&nx);
+ struct ht *hta[nt];
+ prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx);
+ for(int e=1;e<nt;e++) hta[e]=R_allocHt(n);
+ int *cXc=(int*)R_alloc(sizeof(int),n*nt);
+ int *cYc=(int*)R_alloc(sizeof(int),n*nt);
+ double *mi=(double*)R_alloc(sizeof(double),n);
 
- int *cX=(int*)R_alloc(sizeof(int),n);
- int *cY=(int*)R_alloc(sizeof(int),n);
- 
  double *score;
  int *idx;
  SEXP Ans; PROTECT(Ans=makeAns(k,&score,&idx));
@@ -14,17 +16,24 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
   score[e]=-INFINITY; idx[e]=0;
  }
 
- for(int e=0;e<m;e++){
-  fillHt(ht,n,ny,y,nx[e],x[e],NULL,e?NULL:cY,cX,0);
-  double nmi=miHt(ht,cY,cX);
+ #pragma omp parallel
+ { 
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0;
+  struct ht *ht=hta[tn];
+  #pragma omp parallel for
+  for(int e=0;e<m;e++){
+   fillHt(ht,n,ny,y,nx[e],x[e],NULL,madeCy?NULL:cY,cX,0);
+   mi[e]=miHt(ht,cY,cX);
+  }
+ }
 
-  //Insertion, since we need stable sort in principle
-  if(score[k-1]>nmi) continue;
-  int ee=k-2;
-  for(;ee>=0 && score[ee]<nmi;ee--){
+ //Insertion sort since we need stable sort in principle
+ for(int e=0;e<m;e++) if(score[k-1]<=mi[e]){
+  int ee;
+  for(ee=k-2;ee>=0 && score[ee]<mi[e];ee--){
    score[ee+1]=score[ee]; idx[ee+1]=idx[ee];
   }
-  score[ee+1]=nmi; idx[ee+1]=e+1;
+  score[ee+1]=mi[e]; idx[ee+1]=e+1;
  }
 
  UNPROTECT(1);

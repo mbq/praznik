@@ -1,5 +1,3 @@
-#include <omp.h>
-
 int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
  int lc=length(getAttrib(in,R_LevelsSymbol)),*out;
  if(isFactor(in) && lc<n){

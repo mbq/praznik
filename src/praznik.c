@@ -4,6 +4,7 @@
 #include <R_ext/Utils.h>
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h> 
+#include <omp.h>
 
 //Hash table
 
