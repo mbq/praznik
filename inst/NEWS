@@ -1,4 +1,5 @@
 Changes in XXX:
+ - OpenMP parallelism in all praznik functions.
  - Fixed segfault for constant numerical features. Thanks to 
  alecuba16 for spotting this.
 
