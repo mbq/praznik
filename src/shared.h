@@ -23,6 +23,13 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
    max=max>x[e]?max:x[e];
   }
   int *out=(int*)R_alloc(sizeof(int),n);
+  if(max==min){
+   //Real value is almost constant
+   *nout=1;
+   for(int e=0;e<n;e++)
+    out[e]=1;
+   return(out);
+  }
   if(n<6){
    *nout=2;
   }else if(n>30){
@@ -38,7 +45,7 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
  return(NULL);
 }
 
-void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx){
+void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx,int nt){
  if(!isFrame(X)) error("X must be a data.frame");
  *n=length(Y);
  *k=INTEGER(K)[0];
@@ -50,10 +57,11 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int *
  //TODO: Also eat matrices? --> then fix it
  if(*n!=length(VECTOR_ELT(X,0))) error("X and Y size mismatch");
 
- *ht=R_allocHt(*n);
+ for(int e=0;e<nt;e++)
+  ht[e]=R_allocHt(*n);
 
-  *y=convertSEXP(*ht,*n,Y,ny);
-  if(!*y) error("Wrong Y type");
+ *y=convertSEXP(*ht,*n,Y,ny);
+ if(!*y) error("Wrong Y type");
  
  *nx=(int*)R_alloc(sizeof(int),*m);
  *x=(int**)R_alloc(sizeof(int*),*m);
@@ -66,17 +74,27 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int *
  }
 }
 
-void static inline initialMiScan(struct ht* ht,int n,int m,int *y,int ny,int **x,int *nx,int **_cY,int **_cX,double *_mi,double *bs,int *bi){
- int *cX=(int*)R_alloc(sizeof(int),n); if(_cX) *_cX=cX;
- int *cY=(int*)R_alloc(sizeof(int),n); if(_cY) *_cY=cY;
- *bs=0.;
- for(int e=0;e<m;e++){
-  fillHt(ht,n,ny,y,nx[e],x[e],NULL,e?NULL:cY,cX,0);
-  double mi=miHt(ht,cY,cX);
-  if(_mi) _mi[e]=mi;
-  if(mi>*bs){
-   *bs=mi;
-   *bi=e;
+void static inline initialMiScan(struct ht **hta,int n,int m,int *y,int ny,int **x,int *nx,int **_cY,int **_cX,double *_mi,double *bs,int *bi,int nt){
+ int *cXc=(int*)R_alloc(sizeof(int),n*nt); if(_cX) *_cX=cXc;
+ int *cYc=(int*)R_alloc(sizeof(int),n*nt); if(_cY) *_cY=cYc;
+
+ #pragma omp parallel 
+ {
+  double tbs=0.;
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0,tbi=-1;
+  struct ht *ht=hta[tn]; 
+  #pragma omp for
+  for(int e=0;e<m;e++){
+   fillHt(ht,n,ny,y,nx[e],x[e],NULL,madeCy?NULL:cY,cX,0); madeCy=1;
+   double mi=miHt(ht,cY,cX); _mi?_mi[e]=mi:0;
+   if(mi>tbs){
+    tbs=mi; tbi=e;
+   }
+  }
+  #pragma omp critical
+  if(tbs>*bs){
+   *bs=tbs;
+   *bi=tbi;
   }
  }
 }
