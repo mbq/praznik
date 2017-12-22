@@ -11,5 +11,8 @@ Description: A collection of feature selection filters performing greedy optimis
 BugReports: https://github.com/mbq/praznik/issues
 URL: https://github.com/mbq/praznik
 RoxygenNote: 6.0.1
-Suggests: 
-    testthat
+Suggests: testthat
+NeedsCompilation: yes
+Packaged: 2017-12-21 19:17:00 UTC; mbq
+Repository: CRAN
+Date/Publication: 2017-12-21 19:25:05 UTC
