@@ -1,7 +1,4 @@
-//DISR, JMI, JMIM and NJMIM are basically the same method, hence a common function
-
-enum xjm {xjmAccumulate,xjmMinimum};
-SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct ht*,int*,int*)){
+SEXP C_DISR(SEXP X,SEXP Y,SEXP K){
  int nt=omp_get_max_threads();
  int n,k,m,ny,*y,*nx,**x;
  struct ht *hta[nt];
@@ -21,7 +18,7 @@ SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct
  
  //Time for an actual algorithm
  double *as=(double*)R_alloc(sizeof(double),m); //Accumulated score
- for(int e=0;e<m;e++) as[e]=(mode==xjmAccumulate)?0.:INFINITY;
+ for(int e=0;e<m;e++) as[e]=0.;
  int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp;
  bs=0.;
 
@@ -41,12 +38,7 @@ SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct
 
    //Make MI of mix and Y and increase its accumulated score
    fillHt(ht,n,ny,y,nwx,wx,NULL,NULL,cWX,0); //cY stuff is red.
-   if(mode==xjmAccumulate){
-    as[ee]+=sthHt(ht,cY,cWX);
-   }else{
-    double ns=sthHt(ht,cY,cWX);
-    as[ee]=(ns<as[ee])?ns:as[ee];
-   }
+   as[ee]+=nmiHt(ht,cY,cWX);
 
    if(as[ee]>tbs){
     tbs=as[ee]; tbi=ee;
@@ -69,21 +61,5 @@ SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct
 
  UNPROTECT(1);
  return(Ans);
-}
-
-SEXP C_JMI(SEXP X,SEXP Y,SEXP K){
- return(xjcore(X,Y,K,xjmAccumulate,miHt));
-}
-
-SEXP C_DISR(SEXP X,SEXP Y,SEXP K){
- return(xjcore(X,Y,K,xjmAccumulate,nmiHt));
-}
-
-SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
- return(xjcore(X,Y,K,xjmMinimum,miHt));
-}
-
-SEXP C_NJMIM(SEXP X,SEXP Y,SEXP K){
- return(xjcore(X,Y,K,xjmMinimum,nmiHt));
 }
 

@@ -20,7 +20,10 @@
 #include "mi.h"
 #include "mim.h"
 #include "mrmr.h"
-#include "xj.h"
+#include "disr.h"
+#include "jmi.h"
+#include "jmim.h"
+#include "njmim.h"
 
 //Auxiliary
 
