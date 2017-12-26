@@ -23,45 +23,48 @@ SEXP static inline xjcore(SEXP X,SEXP Y,SEXP K,enum xjm mode,double sthHt(struct
  double *as=(double*)R_alloc(sizeof(double),m); //Accumulated score
  for(int e=0;e<m;e++) as[e]=(mode==xjmAccumulate)?0.:INFINITY;
  int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp;
+ bs=0.;
+
+ #pragma omp parallel
  for(int e=1;e<k;e++){
-  bs=0.;  
-  #pragma omp parallel
-  {
-   double tbs=0.;
-   int tbi=-1,tn=omp_get_thread_num();
-   struct ht *ht=hta[tn];
-   int *wx=wxc+(tn*n),*cWX=cWXc+(tn*n);
-   #pragma omp for
-   for(int ee=0;ee<m;ee++){
-    //Ignore attributes already selected
-    if(!x[ee]) continue;
+  double tbs=0.;
+  int tbi=-1,tn=omp_get_thread_num();
+  struct ht *ht=hta[tn];
+  int *wx=wxc+(tn*n),*cWX=cWXc+(tn*n);
+  #pragma omp for
+  for(int ee=0;ee<m;ee++){
+   //Ignore attributes already selected
+   if(!x[ee]) continue;
 
-    //Mix x[ee] with lx making wx
-    int nwx=fillHt(ht,n,nx[ee],x[ee],nw,w,wx,NULL,NULL,1);
+   //Mix x[ee] with lx making wx
+   int nwx=fillHt(ht,n,nx[ee],x[ee],nw,w,wx,NULL,NULL,1);
 
-    //Make MI of mix and Y and increase its accumulated score
-    fillHt(ht,n,ny,y,nwx,wx,NULL,NULL,cWX,0); //cY stuff is red.
-    if(mode==xjmAccumulate){
-     as[ee]+=sthHt(ht,cY,cWX);
-    }else{
-     double ns=sthHt(ht,cY,cWX);
-     as[ee]=(ns<as[ee])?ns:as[ee];
-    }
-
-    if(as[ee]>tbs){
-     tbs=as[ee]; tbi=ee;
-    }
+   //Make MI of mix and Y and increase its accumulated score
+   fillHt(ht,n,ny,y,nwx,wx,NULL,NULL,cWX,0); //cY stuff is red.
+   if(mode==xjmAccumulate){
+    as[ee]+=sthHt(ht,cY,cWX);
+   }else{
+    double ns=sthHt(ht,cY,cWX);
+    as[ee]=(ns<as[ee])?ns:as[ee];
    }
-   //Find max among all threads
-   #pragma omp critical
-   if(tbs>bs){
-    bs=tbs;
-    bi=tbi;
+
+   if(as[ee]>tbs){
+    tbs=as[ee]; tbi=ee;
    }
   }
-  //Commit, in a single thread now
-  w=x[bi]; nw=nx[bi]; x[bi]=NULL; 
-  score[e]=bs; idx[e]=bi+1;
+  #pragma omp critical
+  if(tbs>bs){
+   bs=tbs;
+   bi=tbi;
+  }
+  
+  #pragma omp barrier 
+  #pragma omp single
+  {
+   w=x[bi]; nw=nx[bi]; x[bi]=NULL; 
+   score[e]=bs; idx[e]=bi+1;
+   bs=0.;
+  }
  }
 
  UNPROTECT(1);
