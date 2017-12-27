@@ -35,7 +35,7 @@ SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
   double tbs=-INFINITY;
   int tbi=-1,tn=omp_get_thread_num(),*cX=cYc+(tn*n);
   struct ht *ht=hta[tn];
-  #pragma omp for
+  #pragma omp for schedule(dynamic)
   for(int ee=0;ee<m;ee++){
    //Ignore attributes already selected or with no chance to be max
    if(!x[ee] || tbs>ms[ee]) continue;

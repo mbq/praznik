@@ -32,7 +32,7 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
   int tbi=-1,tn=omp_get_thread_num();
   struct ht *ht=hta[tn];
   int *wx=wxc+(tn*n),*cWX=cWXc+(tn*n);
-  #pragma omp for
+  #pragma omp for schedule(dynamic)
   for(int ee=0;ee<m;ee++){
    //Ignore attributes already selected
    if(!x[ee] || tbs>ms[ee]) continue;
