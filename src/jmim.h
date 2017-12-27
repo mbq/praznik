@@ -9,7 +9,11 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
  if(bs==0) return(makeAns(0,NULL,NULL));
 
  //Save selected X as W and discard from further consideration
- int* w=x[bi],nw=nx[bi]; x[bi]=NULL;
+ int **w=(int**)R_alloc(sizeof(int*),k),
+  *nw=(int*)R_alloc(sizeof(int),k),
+  *lk=(int*)R_alloc(sizeof(int),m);
+ w[0]=x[bi]; nw[0]=nx[bi]; x[bi]=NULL;
+ for(int e=0;e<m;e++) lk[e]=0;
 
  //Yet put it as a first selected attribute
  double *score; int *idx;
@@ -17,8 +21,8 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
  score[0]=bs; idx[0]=bi+1;
  
  //Time for an actual algorithm
- double *as=(double*)R_alloc(sizeof(double),m);
- for(int e=0;e<m;e++) as[e]=INFINITY;
+ double *ms=(double*)R_alloc(sizeof(double),m);
+ for(int e=0;e<m;e++) ms[e]=INFINITY;
  int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp;
  bs=0.;
 
@@ -28,21 +32,26 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
   int tbi=-1,tn=omp_get_thread_num();
   struct ht *ht=hta[tn];
   int *wx=wxc+(tn*n),*cWX=cWXc+(tn*n);
-  #pragma omp for
+  #pragma omp for schedule(dynamic)
   for(int ee=0;ee<m;ee++){
    //Ignore attributes already selected
-   if(!x[ee]) continue;
+   if(!x[ee] || tbs>ms[ee]) continue;
 
-   //Mix x[ee] with lx making wx
-   int nwx=fillHt(ht,n,nx[ee],x[ee],nw,w,wx,NULL,NULL,1);
-
-   //Make MI of mix and Y and increase its accumulated score
-   fillHt(ht,n,ny,y,nwx,wx,NULL,NULL,cWX,0); //cY stuff is red.
-   double ns=miHt(ht,cY,cWX);
-   as[ee]=(ns<as[ee])?ns:as[ee];
-
-   if(as[ee]>tbs){
-    tbs=as[ee]; tbi=ee;
+   //Push forward towards e
+   for(;lk[ee]<e;lk[ee]++){
+    int ew=lk[ee];
+    //Mix x[ee] with lx making wx
+    int nwx=fillHt(ht,n,nx[ee],x[ee],nw[ew],w[ew],wx,NULL,NULL,1);
+    //Make MI of mix and Y and increase its accumulated score
+    fillHt(ht,n,ny,y,nwx,wx,NULL,NULL,cWX,0); //cY stuff is red.
+    double ns=miHt(ht,cY,cWX);
+    ms[ee]=(ns<ms[ee])?ns:ms[ee];
+    //Maybe it is already eliminated?
+    if(tbs>ms[ee]) break;
+   }
+   //Check again
+   if(ms[ee]>tbs){
+    tbs=ms[ee]; tbi=ee;
    }
   }
   #pragma omp critical
@@ -50,11 +59,10 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
    bs=tbs;
    bi=tbi;
   }
-  
   #pragma omp barrier 
   #pragma omp single
   {
-   w=x[bi]; nw=nx[bi]; x[bi]=NULL; 
+   w[e]=x[bi]; nw[e]=nx[bi]; x[bi]=NULL; 
    score[e]=bs; idx[e]=bi+1;
    bs=0.;
   }
