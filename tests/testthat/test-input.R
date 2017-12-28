@@ -30,6 +30,15 @@ test_that("Constant real features work",{
  expect_equal(ans$scores,0)
 })
 
+test_that("Zero-score features work",{
+ expand.grid(a=c(T,F),b=c(T,F),n1=c(T,F),n2=c(T,F),n3=c(T,F))->X
+ X$aub<-X$a|X$b
+ X$anb<-X$a&X$b
+ Y<-X$a!=X$b
+ for(e in c(MIM,JMIM,NJMIM,JMI,DISR,CMIM,MRMR))
+  expect_equal(sort(e(X,Y,ncol(X))$selection),sort(names(X)))
+})
+
 test_that("X must be only reals, booleans, integers or factors",{
  Y<-c(TRUE,TRUE,FALSE,FALSE,FALSE)
  li<-data.frame(A=1:5)

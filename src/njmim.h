@@ -24,11 +24,11 @@ SEXP C_NJMIM(SEXP X,SEXP Y,SEXP K){
  double *ms=(double*)R_alloc(sizeof(double),m);
  for(int e=0;e<m;e++) ms[e]=INFINITY;
  int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp;
- bs=0.;
+ bs=-INFINITY;
 
  #pragma omp parallel
  for(int e=1;e<k;e++){
-  double tbs=0.;
+  double tbs=-INFINITY;
   int tbi=-1,tn=omp_get_thread_num();
   struct ht *ht=hta[tn];
   int *wx=wxc+(tn*n),*cWX=cWXc+(tn*n);
@@ -64,7 +64,7 @@ SEXP C_NJMIM(SEXP X,SEXP Y,SEXP K){
   {
    w[e]=x[bi]; nw[e]=nx[bi]; x[bi]=NULL; 
    score[e]=bs; idx[e]=bi+1;
-   bs=0.;
+   bs=-INFINITY;
   }
  }
 
