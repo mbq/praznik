@@ -4,7 +4,12 @@
 #include <R_ext/Utils.h>
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h> 
-#include <omp.h>
+
+#ifdef _OPENMP
+ #include <omp.h>
+#else
+ #include "fake-omp.h"
+#endif
 
 //Hash table
 
