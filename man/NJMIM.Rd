@@ -17,7 +17,7 @@ NJMIM(X, Y, k = 3)
 Must not exceed \code{ncol(X)}.}
 }
 \value{
-A list with two elements: \code{selection}, a vector of names of the selected features in the selection order (note that it may be shorter than \code{k}), and \code{scores}, a vector of feature scores.
+A list with two elements: \code{selection}, a vector of names of the selected features in the selection order (note that it may be shorter than \code{k}), and \code{scores}, a vector of corresponding feature scores.
 }
 \description{
 The method starts with an attribute of a maximal mutual information with the decision \eqn{Y}.
@@ -28,6 +28,7 @@ The method stops either when no initial attribute with positive mutual informati
 }
 \note{
 NJMIM is a normalised version of \code{\link{JMIM}}; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
+It stops returning features when the best score reaches 0.
 
 The method requires input to be discrete to use empirical estimators of distribution, and, consequently, information gain or entropy.
 To allow smoother user experience, praznik automatically coerces non-factor vectors in \code{X} and \code{Y}, which requires additional time and space and may yield confusing results -- the best practice is to convert data to factors prior to feeding them in this function.
