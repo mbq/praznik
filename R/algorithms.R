@@ -38,7 +38,6 @@ MIM<-function(X,Y,k=3){
 CMIM<-function(X,Y,k=3){
  .Call(C_CMIM,X,Y,as.integer(k))->ans
  names(ans)<-c("selection","scores")
- ans<-lapply(ans,'[',ans$scores>0)
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -127,7 +126,6 @@ MI<-function(X,Y){
 JMIM<-function(X,Y,k=3){
  .Call(C_JMIM,X,Y,as.integer(k))->ans
  names(ans)<-c("selection","scores")
- ans<-lapply(ans,'[',ans$scores>0)
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -149,7 +147,6 @@ JMIM<-function(X,Y,k=3){
 NJMIM<-function(X,Y,k=3){
  .Call(C_NJMIM,X,Y,as.integer(k))->ans
  names(ans)<-c("selection","scores")
- ans<-lapply(ans,'[',ans$scores>0)
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
