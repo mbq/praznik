@@ -35,8 +35,14 @@ test_that("Zero-score features work",{
  X$aub<-X$a|X$b
  X$anb<-X$a&X$b
  Y<-X$a!=X$b
- for(e in c(MIM,JMIM,NJMIM,JMI,DISR,CMIM,MRMR))
+ for(e in c(MIM,JMI,DISR,MRMR))
   expect_equal(sort(e(X,Y,ncol(X))$selection),sort(names(X)))
+ for(e in c(CMIM,JMIM,NJMIM)){
+  e(X,Y,ncol(X))->ans
+  expect_true(all(ans$score>0))
+  expect_true(all(ans$selection%in%names(X)))
+  expect_false(any(duplicated(ans$selection)))
+ }
 })
 
 test_that("X must be only reals, booleans, integers or factors",{

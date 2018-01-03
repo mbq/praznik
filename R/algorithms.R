@@ -29,6 +29,7 @@ MIM<-function(X,Y,k=3){
 #' where \eqn{S} is the set of already selected attributes.
 #' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
 #' @note CMIM is identical to the Informative Fragments (IF) method.
+#' It stops returning features when the best score reaches 0.
 #' @references "Fast Binary Feature Selection using Conditional Mutual Information Maximisation" F. Fleuret, JMLR (2004)
 #' @references "Object recognition with informative features and linear classification" M. Vidal-Naquet and S. Ullman, IEEE Conference on Computer Vision and Pattern Recognition (2003).
 #' @template generic
@@ -118,6 +119,7 @@ MI<-function(X,Y){
 #' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
 #'
 #' @note \code{\link{NJMIM}} is a normalised version of JMIM; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
+#' It stops returning features when the best score reaches 0.
 #' @template generic
 #' @examples data(MadelonD)
 #' JMIM(MadelonD$X,MadelonD$Y,20)
@@ -139,6 +141,7 @@ JMIM<-function(X,Y,k=3){
 #' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
 #'
 #' @note NJMIM is a normalised version of \code{\link{JMIM}}; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
+#' It stops returning features when the best score reaches 0.
 #' @template generic
 #' @examples data(MadelonD)
 #' NJMIM(MadelonD$X,MadelonD$Y,20)

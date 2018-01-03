@@ -17,7 +17,7 @@ MIM(X, Y, k = 3)
 Must not exceed \code{ncol(X)}.}
 }
 \value{
-A list with two elements: \code{selection}, a vector of names of the selected features in the selection order (note that it may be shorter than \code{k}), and \code{scores}, a vector of feature scores.
+A list with two elements: \code{selection}, a vector of names of the selected features in the selection order (note that it may be shorter than \code{k}), and \code{scores}, a vector of corresponding feature scores.
 }
 \description{
 Calculates mutual information between all attributes and the decision, then returns top k.

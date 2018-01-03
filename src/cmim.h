@@ -19,12 +19,12 @@ SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
   *cWY=(int*)R_alloc(sizeof(int),n*k);
  w[0]=x[bi]; nw[0]=nx[bi]; x[bi]=NULL;
  for(int e=0;e<m;e++) lk[e]=0;
- double *score; int *idx;
+ double *score; int *idx,ke=k;
  SEXP Ans; PROTECT(Ans=makeAns(k,&score,&idx));
  score[0]=bs; idx[0]=bi+1;
  
  #pragma omp parallel
- for(int e=1;e<k;e++){
+ for(int e=1;e<ke;e++){
   #pragma omp single
   {
    bs=-INFINITY;
@@ -66,9 +66,20 @@ SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
   }
   #pragma omp barrier
   #pragma omp single
-  {
+  if(bs>0.){
    w[e]=x[bi]; nw[e]=nx[bi]; x[bi]=NULL;
    score[e]=bs; idx[e]=bi+1;
+  }else ke=e;
+ }
+
+ if(ke!=k){
+  UNPROTECT(1);
+  double *scoree;
+  int *idxe;
+  PROTECT(Ans=makeAns(ke,&scoree,&idxe));
+  for(int e=0;e<ke;e++){
+   scoree[e]=score[e];
+   idxe[e]=idx[e];
   }
  }
 

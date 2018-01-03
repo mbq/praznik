@@ -23,11 +23,11 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
  //Time for an actual algorithm
  double *ms=(double*)R_alloc(sizeof(double),m);
  for(int e=0;e<m;e++) ms[e]=INFINITY;
- int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp;
+ int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp,ke=k;
  bs=-INFINITY;
 
  #pragma omp parallel
- for(int e=1;e<k;e++){
+ for(int e=1;e<ke;e++){
   double tbs=-INFINITY;
   int tbi=-1,tn=omp_get_thread_num();
   struct ht *ht=hta[tn];
@@ -61,10 +61,21 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
   }
   #pragma omp barrier 
   #pragma omp single
-  {
+  if(bs>0.){
    w[e]=x[bi]; nw[e]=nx[bi]; x[bi]=NULL; 
    score[e]=bs; idx[e]=bi+1;
    bs=-INFINITY;
+  }else ke=e;
+ }
+
+ if(ke!=k){
+  UNPROTECT(1);
+  double *scoree;
+  int *idxe;
+  PROTECT(Ans=makeAns(ke,&scoree,&idxe));
+  for(int e=0;e<ke;e++){
+   scoree[e]=score[e];
+   idxe[e]=idx[e];
   }
  }
 
