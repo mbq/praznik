@@ -3,6 +3,7 @@ Changes in 3.0:
  - Fixed segfault in NJMIM/JMIM for certain, specific inputs.
  - Faster internal hash table.
  - Faster CMIM/NJMIM/JMIM due to Fleuret's algorithm.
+ - MI function exported.
 
 Changes in 2.0:
  - OpenMP parallelism in all praznik functions.

@@ -10,7 +10,9 @@
 #'
 #' Calculates mutual information between all attributes and the decision, then returns top k.
 #' @useDynLib praznik, .registration=TRUE
-#' @template generic
+#' @template input
+#' @template k
+#' @template output
 #' @examples data(MadelonD)
 #' MIM(MadelonD$X,MadelonD$Y,20)
 #' @export
@@ -27,12 +29,12 @@ MIM<-function(X,Y,k=3){
 #' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 #' \deqn{J(X)=\min_{W\in S} I(X;Y|W),}
 #' where \eqn{S} is the set of already selected attributes.
-#' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
 #' @note CMIM is identical to the Informative Fragments (IF) method.
-#' It stops returning features when the best score reaches 0.
 #' @references "Fast Binary Feature Selection using Conditional Mutual Information Maximisation" F. Fleuret, JMLR (2004)
 #' @references "Object recognition with informative features and linear classification" M. Vidal-Naquet and S. Ullman, IEEE Conference on Computer Vision and Pattern Recognition (2003).
-#' @template generic
+#' @template input
+#' @template k
+#' @template output-mim
 #' @examples data(MadelonD)
 #' CMIM(MadelonD$X,MadelonD$Y,20)
 #' @export
@@ -49,9 +51,10 @@ CMIM<-function(X,Y,k=3){
 #' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 #' \deqn{J(X)=I(X;Y)-\frac{1}{|S|}\sum_{W\in S} I(X;W),}
 #' where \eqn{S} is the set of already selected attributes.
-#' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
 #' @references "Feature Selection Based on Mutual Information: Criteria of Max-Dependency, Max-Relevance, and Min-Redundancy" H. Peng et al. IEEE Pattern Analysis and Machine Intelligence (PAMI) (2005)
-#' @template generic
+#' @template input
+#' @template k
+#' @template output
 #' @examples data(MadelonD)
 #' MRMR(MadelonD$X,MadelonD$Y,20)
 #' @export
@@ -68,11 +71,11 @@ MRMR<-function(X,Y,k=3){
 #' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 #' \deqn{J(X)=\sum_{W\in S} I(X,W;Y),}
 #' where \eqn{S} is the set of already selected attributes.
-#' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
-#'
 #' @note \code{\link{DISR}} is a normalised version of JMI; \code{\link{JMIM}} and \code{\link{NJMIM}} are modifications of JMI and DISR in which minimal joint information over already selected attributes is used instead of a sum.
 #' @references "Data Visualization and Feature Selection: New Algorithms for Nongaussian Data H. Yang and J. Moody, NIPS (1999)
-#' @template generic
+#' @template input
+#' @template k
+#' @template output
 #' @examples data(MadelonD)
 #' JMI(MadelonD$X,MadelonD$Y,20)
 #' @export
@@ -89,11 +92,11 @@ JMI<-function(X,Y,k=3){
 #' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 #' \deqn{J(X)=\sum_{W\in S} \frac{I(X,W;Y)}{H(X,W,Y)},}
 #' where \eqn{S} is the set of already selected attributes.
-#' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
-#'
 #' @note DISR is a normalised version of \code{\link{JMI}}; \code{\link{JMIM}} and \code{\link{NJMIM}} are modifications of JMI and DISR in which minimal joint information over already selected attributes is used instead of a sum.
 #' @references "On the Use of Variable Complementarity for Feature Selection in Cancer Classification" P. Meyer and G. Bontempi, (2006)
-#' @template generic
+#' @template input
+#' @template k
+#' @template output
 #' @examples data(MadelonD)
 #' DISR(MadelonD$X,MadelonD$Y,20)
 #' @export
@@ -103,6 +106,14 @@ DISR<-function(X,Y,k=3){
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
+
+#' Mutual information scores
+#'
+#' The method returns a vector of each feature mutual information with the decision, as used by the selection methods in this package for initial feature selection.
+#' @template input
+#' @return A vector of feature scores, in the order as in \code{X}, and names copied from \code{colnames(X)}.
+#' @note This function does the same as \code{MIM(X,Y,ncol(X))} but much faster for larger inputs as it does not perform sorting of features.
+#' @export
 
 MI<-function(X,Y){
  .Call(C_MI,X,Y,0L)->ans
@@ -116,11 +127,10 @@ MI<-function(X,Y){
 #' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 #' \deqn{J(X)=\min_{W\in S} I(X,W;Y),}
 #' where \eqn{S} is the set of already selected attributes.
-#' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
-#'
 #' @note \code{\link{NJMIM}} is a normalised version of JMIM; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
-#' It stops returning features when the best score reaches 0.
-#' @template generic
+#' @template input
+#' @template k
+#' @template output-mim
 #' @examples data(MadelonD)
 #' JMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
@@ -138,11 +148,11 @@ JMIM<-function(X,Y,k=3){
 #' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 #' \deqn{J(X)=\min_{W\in S} \frac{I(X,W;Y)}{H(X,W,Y)},}
 #' where \eqn{S} is the set of already selected attributes.
-#' The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
-#'
 #' @note NJMIM is a normalised version of \code{\link{JMIM}}; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.
 #' It stops returning features when the best score reaches 0.
-#' @template generic
+#' @template input
+#' @template k
+#' @template output-mim
 #' @examples data(MadelonD)
 #' NJMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)

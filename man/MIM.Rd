@@ -7,7 +7,7 @@
 MIM(X, Y, k = 3)
 }
 \arguments{
-\item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo magical cutting).
+\item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo automatic categorisation; see below for details).
 \code{NA}s are not allowed.}
 
 \item{Y}{Decision attribute; should be given as a factor, but other options are accepted, exactly like for attributes.
@@ -17,7 +17,8 @@ MIM(X, Y, k = 3)
 Must not exceed \code{ncol(X)}.}
 }
 \value{
-A list with two elements: \code{selection}, a vector of names of the selected features in the selection order (note that it may be shorter than \code{k}), and \code{scores}, a vector of corresponding feature scores.
+A list with two elements: \code{selection}, a vector of names of the selected features in the selection order, and \code{scores}, a vector of corresponding feature scores.
+Both vectors will either have a length \code{k} or zero, when all features turn to have zero mutual information with the decision.
 }
 \description{
 Calculates mutual information between all attributes and the decision, then returns top k.
