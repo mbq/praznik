@@ -27,7 +27,7 @@ test_that("Nameless data.frames",{
  z<-iris[,-5]
  names(z)<-NULL
  JMI(z,iris$Species,4)->ans
- expect_null(names(ans$scores))
+ expect_null(names(ans$score))
  expect_null(names(ans$selection))
  expect_true(all(ans$selection%in%(1:4)))
 })
@@ -36,7 +36,7 @@ test_that("Constant real features work",{
  #Throws segfault in 1.0.0
  MIM(data.frame(a=rep(1,150)),iris$Species,1)->ans
  expect_equal(names(ans$selection),"a")
- expect_equal(ans$scores,c(a=0))
+ expect_equal(ans$score,c(a=0))
 })
 
 test_that("Zero-score features work",{

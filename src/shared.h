@@ -106,7 +106,7 @@ SEXP makeAns(int k,double **score,int **idx){
  SEXP Score; PROTECT(Score=allocVector(REALSXP,k));
 
  SET_STRING_ELT(AnsN,0,mkChar("selection"));
- SET_STRING_ELT(AnsN,1,mkChar("scores"));
+ SET_STRING_ELT(AnsN,1,mkChar("score"));
  setAttrib(Ans,R_NamesSymbol,AnsN);
  
  SET_VECTOR_ELT(Ans,0,Idx);

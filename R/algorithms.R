@@ -16,10 +16,8 @@
 #' @examples data(MadelonD)
 #' MIM(MadelonD$X,MadelonD$Y,20)
 #' @export
-MIM<-function(X,Y,k=3){
- .Call(C_MIM,X,Y,as.integer(k))->ans
- return(ans)
-}
+MIM<-function(X,Y,k=3)
+ .Call(C_MIM,X,Y,as.integer(k))
 
 #' Minimal conditional mutual information maximisation filter
 #'
@@ -133,7 +131,5 @@ NJMIM<-function(X,Y,k=3)
 #' @note This function is the same as provided by the \code{OpenMPController} package.
 #' You can also control OpenMP code by using environment variables, in particular \code{OMP_NUM_THREADS}.
 #' @export
-setOmpThreads<-function(threads){
- .Call(C_setOmpThreads,as.integer(threads)[1])
- return(invisible(NULL))
-}
+setOmpThreads<-function(threads)
+ invisible(.Call(C_setOmpThreads,as.integer(threads)[1]))
