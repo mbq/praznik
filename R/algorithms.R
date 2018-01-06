@@ -12,16 +12,12 @@
 #' @useDynLib praznik, .registration=TRUE
 #' @template input
 #' @template k
-#' @template output
+#' @template output-mim
 #' @examples data(MadelonD)
 #' MIM(MadelonD$X,MadelonD$Y,20)
 #' @export
-MIM<-function(X,Y,k=3){
- .Call(C_MIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+MIM<-function(X,Y,k=3)
+ .Call(C_MIM,X,Y,as.integer(k))
 
 #' Minimal conditional mutual information maximisation filter
 #'
@@ -38,12 +34,8 @@ MIM<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' CMIM(MadelonD$X,MadelonD$Y,20)
 #' @export
-CMIM<-function(X,Y,k=3){
- .Call(C_CMIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+CMIM<-function(X,Y,k=3)
+ .Call(C_CMIM,X,Y,as.integer(k))
 
 #' Minimum redundancy maximal relevancy filter
 #'
@@ -58,12 +50,8 @@ CMIM<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' MRMR(MadelonD$X,MadelonD$Y,20)
 #' @export
-MRMR<-function(X,Y,k=3){
- .Call(C_MRMR,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+MRMR<-function(X,Y,k=3)
+ .Call(C_MRMR,X,Y,as.integer(k))
 
 #' Joint mutual information filter
 #'
@@ -79,12 +67,8 @@ MRMR<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' JMI(MadelonD$X,MadelonD$Y,20)
 #' @export
-JMI<-function(X,Y,k=3){
- .Call(C_JMI,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+JMI<-function(X,Y,k=3)
+ .Call(C_JMI,X,Y,as.integer(k))
 
 #' Double input symmetrical relevance filter
 #'
@@ -100,12 +84,8 @@ JMI<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' DISR(MadelonD$X,MadelonD$Y,20)
 #' @export
-DISR<-function(X,Y,k=3){
- .Call(C_DISR,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+DISR<-function(X,Y,k=3)
+ .Call(C_DISR,X,Y,as.integer(k))
 
 #' Minimal joint mutual information maximisation filter
 #'
@@ -121,12 +101,8 @@ DISR<-function(X,Y,k=3){
 #' JMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
-JMIM<-function(X,Y,k=3){
- .Call(C_JMIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+JMIM<-function(X,Y,k=3)
+ .Call(C_JMIM,X,Y,as.integer(k))
 
 #' Minimal normalised joint mutual information maximisation filter
 #'
@@ -143,12 +119,8 @@ JMIM<-function(X,Y,k=3){
 #' NJMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
-NJMIM<-function(X,Y,k=3){
- .Call(C_NJMIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+NJMIM<-function(X,Y,k=3)
+ .Call(C_NJMIM,X,Y,as.integer(k))
 
 #' Control OpenMP thread count
 #'
@@ -159,7 +131,5 @@ NJMIM<-function(X,Y,k=3){
 #' @note This function is the same as provided by the \code{OpenMPController} package.
 #' You can also control OpenMP code by using environment variables, in particular \code{OMP_NUM_THREADS}.
 #' @export
-setOmpThreads<-function(threads){
- .Call(C_setOmpThreads,as.integer(threads)[1])
- return(invisible(NULL))
-}
+setOmpThreads<-function(threads)
+ invisible(.Call(C_setOmpThreads,as.integer(threads)[1]))

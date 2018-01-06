@@ -11,8 +11,8 @@ for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMIM","MRMR")){
  test_that(sprintf("Native %s works the same on permuted Madelon",algo,algo),{
   do.call(algo,input)->j
   do.call(algo,inputp)->p
-  expect_equal(j$scores,p$scores)
-  expect_equal(j$selection,p$selection)
+  expect_equal(j$score,p$score)
+  expect_equal(names(j$selection),names(p$selection))
  })
 }
 
