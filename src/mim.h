@@ -35,6 +35,8 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
   score[ee+1]=mi[e]; idx[ee+1]=e+1;
  }
 
+ Ans=finishAns(k,Ans,X);
+
  UNPROTECT(1);
  return(Ans);
 }

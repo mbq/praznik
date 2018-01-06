@@ -118,6 +118,37 @@ SEXP makeAns(int k,double **score,int **idx){
  return(Ans);
 }
 
+SEXP finishAns(int k,SEXP Ans,SEXP X){
+ if(k<length(VECTOR_ELT(Ans,0))){
+  //Need to clip Ans
+  SEXP Iidx; PROTECT(Iidx=allocVector(INTSXP,k));
+  SEXP Sscore; PROTECT(Sscore=allocVector(REALSXP,k));
+  int *idx=INTEGER(VECTOR_ELT(Ans,0)),*iidx=INTEGER(Iidx);
+  double *score=REAL(VECTOR_ELT(Ans,1)),*sscore=REAL(Sscore);
+  for(int e=0;e<k;e++){
+   sscore[e]=score[e];
+   iidx[e]=idx[e];
+  }
+  SET_VECTOR_ELT(Ans,0,Iidx);
+  SET_VECTOR_ELT(Ans,1,Sscore);
+  UNPROTECT(2);
+ }
+ //X is a data.frame, does it have names?
+ SEXP Xn=getAttrib(X,R_NamesSymbol);
+ if(!isNull(Xn)){
+  //Copy names into names of scores and selection
+  SEXP An; PROTECT(An=allocVector(STRSXP,k));
+  int *idx=INTEGER(VECTOR_ELT(Ans,0));
+  for(int e=0;e<k;e++){
+   SET_STRING_ELT(An,e,STRING_ELT(Xn,idx[e]-1));
+  }
+  setAttrib(VECTOR_ELT(Ans,0),R_NamesSymbol,An);
+  setAttrib(VECTOR_ELT(Ans,1),R_NamesSymbol,An);
+  UNPROTECT(1);
+ }
+ return(Ans);
+}
+
 //Macros
 
 #define ISWAP(x,y) do{int *__tmp=x;x=y;y=__tmp;}while(0)

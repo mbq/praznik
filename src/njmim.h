@@ -68,17 +68,7 @@ SEXP C_NJMIM(SEXP X,SEXP Y,SEXP K){
   }else ke=e;
  }
 
- if(ke!=k){
-  UNPROTECT(1);
-  double *scoree;
-  int *idxe;
-  PROTECT(Ans=makeAns(ke,&scoree,&idxe));
-  for(int e=0;e<ke;e++){
-   scoree[e]=score[e];
-   idxe[e]=idx[e];
-  }
- }
-
+ Ans=finishAns(ke,Ans,X);
  UNPROTECT(1);
  return(Ans);
 }

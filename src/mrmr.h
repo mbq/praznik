@@ -55,6 +55,8 @@ SEXP C_MRMR(SEXP X,SEXP Y,SEXP K){
    bs=-INFINITY;
   }
  }
+
+ Ans=finishAns(k,Ans,X);
  UNPROTECT(1);
  return(Ans);
 }

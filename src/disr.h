@@ -59,6 +59,7 @@ SEXP C_DISR(SEXP X,SEXP Y,SEXP K){
   }
  }
 
+ Ans=finishAns(k,Ans,X);
  UNPROTECT(1);
  return(Ans);
 }

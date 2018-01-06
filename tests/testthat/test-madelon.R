@@ -12,7 +12,7 @@ for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMIM","MRMR")){
   do.call(algo,input)->j
   do.call(algo,inputp)->p
   expect_equal(j$scores,p$scores)
-  expect_equal(j$selection,p$selection)
+  expect_equal(names(j$selection),names(p$selection))
  })
 }
 

@@ -18,7 +18,6 @@
 #' @export
 MIM<-function(X,Y,k=3){
  .Call(C_MIM,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
 
@@ -37,11 +36,8 @@ MIM<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' CMIM(MadelonD$X,MadelonD$Y,20)
 #' @export
-CMIM<-function(X,Y,k=3){
- .Call(C_CMIM,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+CMIM<-function(X,Y,k=3)
+ .Call(C_CMIM,X,Y,as.integer(k))
 
 #' Minimum redundancy maximal relevancy filter
 #'
@@ -56,11 +52,8 @@ CMIM<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' MRMR(MadelonD$X,MadelonD$Y,20)
 #' @export
-MRMR<-function(X,Y,k=3){
- .Call(C_MRMR,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+MRMR<-function(X,Y,k=3)
+ .Call(C_MRMR,X,Y,as.integer(k))
 
 #' Joint mutual information filter
 #'
@@ -76,11 +69,8 @@ MRMR<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' JMI(MadelonD$X,MadelonD$Y,20)
 #' @export
-JMI<-function(X,Y,k=3){
- .Call(C_JMI,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+JMI<-function(X,Y,k=3)
+ .Call(C_JMI,X,Y,as.integer(k))
 
 #' Double input symmetrical relevance filter
 #'
@@ -96,11 +86,8 @@ JMI<-function(X,Y,k=3){
 #' @examples data(MadelonD)
 #' DISR(MadelonD$X,MadelonD$Y,20)
 #' @export
-DISR<-function(X,Y,k=3){
- .Call(C_DISR,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+DISR<-function(X,Y,k=3)
+ .Call(C_DISR,X,Y,as.integer(k))
 
 #' Mutual information scores
 #'
@@ -110,11 +97,8 @@ DISR<-function(X,Y,k=3){
 #' @note This function does the same as \code{MIM(X,Y,ncol(X))} but much faster for larger inputs as it does not perform sorting of features.
 #' @export
 
-MI<-function(X,Y){
- .Call(C_MI,X,Y,0L)->ans
- names(ans)<-colnames(X)
- return(ans)
-}
+MI<-function(X,Y)
+ .Call(C_MI,X,Y,3L)
 
 #' Minimal joint mutual information maximisation filter
 #'
@@ -130,11 +114,8 @@ MI<-function(X,Y){
 #' JMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
-JMIM<-function(X,Y,k=3){
- .Call(C_JMIM,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+JMIM<-function(X,Y,k=3)
+ .Call(C_JMIM,X,Y,as.integer(k))
 
 #' Minimal normalised joint mutual information maximisation filter
 #'
@@ -151,11 +132,8 @@ JMIM<-function(X,Y,k=3){
 #' NJMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
-NJMIM<-function(X,Y,k=3){
- .Call(C_NJMIM,X,Y,as.integer(k))->ans
- ans$selection<-colnames(X)[ans$selection]
- return(ans)
-}
+NJMIM<-function(X,Y,k=3)
+ .Call(C_NJMIM,X,Y,as.integer(k))
 
 #' Control OpenMP thread count
 #'
