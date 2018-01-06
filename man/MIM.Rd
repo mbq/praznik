@@ -18,7 +18,8 @@ Must not exceed \code{ncol(X)}.}
 }
 \value{
 A list with two elements: \code{selection}, a vector of names of the selected features in the selection order, and \code{scores}, a vector of corresponding feature scores.
-Both vectors will either have a length \code{k} or zero, when all features turn to have zero mutual information with the decision.
+Both vectors will be at most of a length \code{k}, as the selection will stop as soon as all the remaining features will have a score of zero.
+This may happen during initial selection, in which case both vectors will be empty.
 }
 \description{
 Calculates mutual information between all attributes and the decision, then returns top k.

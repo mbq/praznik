@@ -44,9 +44,9 @@ test_that("Zero-score features work",{
  X$aub<-X$a|X$b
  X$anb<-X$a&X$b
  Y<-X$a!=X$b
- for(e in c(JMI,DISR,MRMR,MIM))
+ for(e in c(JMI,DISR,MRMR))
   expect_equal(sort(names(e(X,Y,ncol(X))$selection)),sort(names(X)))
- for(e in c(CMIM,JMIM,NJMIM)){
+ for(e in c(MIM,CMIM,JMIM,NJMIM)){
   e(X,Y,ncol(X))->ans
   expect_true(all(ans$score>0))
   expect_true(all(names(ans$selection)%in%names(X)))
