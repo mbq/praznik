@@ -18,7 +18,6 @@
 #' @export
 MIM<-function(X,Y,k=3){
  .Call(C_MIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -40,7 +39,6 @@ MIM<-function(X,Y,k=3){
 #' @export
 CMIM<-function(X,Y,k=3){
  .Call(C_CMIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -60,7 +58,6 @@ CMIM<-function(X,Y,k=3){
 #' @export
 MRMR<-function(X,Y,k=3){
  .Call(C_MRMR,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -81,7 +78,6 @@ MRMR<-function(X,Y,k=3){
 #' @export
 JMI<-function(X,Y,k=3){
  .Call(C_JMI,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -102,7 +98,6 @@ JMI<-function(X,Y,k=3){
 #' @export
 DISR<-function(X,Y,k=3){
  .Call(C_DISR,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -137,7 +132,6 @@ MI<-function(X,Y){
 #' @export
 JMIM<-function(X,Y,k=3){
  .Call(C_JMIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }
@@ -159,7 +153,6 @@ JMIM<-function(X,Y,k=3){
 #' @export
 NJMIM<-function(X,Y,k=3){
  .Call(C_NJMIM,X,Y,as.integer(k))->ans
- names(ans)<-c("selection","scores")
  ans$selection<-colnames(X)[ans$selection]
  return(ans)
 }

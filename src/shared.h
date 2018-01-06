@@ -101,14 +101,20 @@ void static inline initialMiScan(struct ht **hta,int n,int m,int *y,int ny,int *
 
 SEXP makeAns(int k,double **score,int **idx){
  SEXP Ans; PROTECT(Ans=allocVector(VECSXP,2));
+ SEXP AnsN; PROTECT(AnsN=allocVector(STRSXP,2));
  SEXP Idx; PROTECT(Idx=allocVector(INTSXP,k));
  SEXP Score; PROTECT(Score=allocVector(REALSXP,k));
+
+ SET_STRING_ELT(AnsN,0,mkChar("selection"));
+ SET_STRING_ELT(AnsN,1,mkChar("scores"));
+ setAttrib(Ans,R_NamesSymbol,AnsN);
+ 
  SET_VECTOR_ELT(Ans,0,Idx);
  SET_VECTOR_ELT(Ans,1,Score);
 
  if(score) *score=REAL(Score);
  if(idx) *idx=INTEGER(Idx);
- UNPROTECT(3);
+ UNPROTECT(4);
  return(Ans);
 }
 
