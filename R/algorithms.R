@@ -89,17 +89,6 @@ JMI<-function(X,Y,k=3)
 DISR<-function(X,Y,k=3)
  .Call(C_DISR,X,Y,as.integer(k))
 
-#' Mutual information scores
-#'
-#' The method returns a vector of each feature mutual information with the decision, as used by the selection methods in this package for initial feature selection.
-#' @template input
-#' @return A vector of feature scores, in the order as in \code{X}, and names copied from \code{colnames(X)}.
-#' @note This function more less does the same as \code{MIM(X,Y,ncol(X))} but much faster for larger inputs as it does not perform sorting of features; it also returns features with a zero score.
-#' @export
-
-MI<-function(X,Y)
- .Call(C_MI,X,Y,3L)
-
 #' Minimal joint mutual information maximisation filter
 #'
 #' The method starts with an attribute of a maximal mutual information with the decision \eqn{Y}.
