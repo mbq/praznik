@@ -21,38 +21,42 @@ SEXP C_MRMR(SEXP X,SEXP Y,SEXP K){
  //Time for an actual MRMR
  double *reds=(double*)R_alloc(sizeof(double),m); //Redundancy
  for(int e=0;e<m;e++) reds[e]=0.;
+ bs=-INFINITY;
 
+ #pragma omp parallel
  for(int e=1;e<k;e++){
-  bs=-INFINITY;
-  #pragma omp parallel 
-  {
-   double tbs=-INFINITY;
-   int tbi=-1,tn=omp_get_thread_num();
-   int *cW=ctmp+(n*tn),*cX=ctmp2+(n*tn),dw=0;
-   struct ht *ht=hta[tn];
-   #pragma omp for
-   for(int ee=0;ee<m;ee++){
-    //Ignore attributes already selected
-    if(!x[ee]) continue;
+  double tbs=-INFINITY;
+  int tbi=-1,tn=omp_get_thread_num();
+  int *cW=ctmp+(n*tn),*cX=ctmp2+(n*tn),dw=0;
+  struct ht *ht=hta[tn];
+  #pragma omp for
+  for(int ee=0;ee<m;ee++){
+   //Ignore attributes already selected
+   if(!x[ee]) continue;
 
-    //WY x[ee] with w making the redundancy part
-    fillHt(ht,n,nx[ee],x[ee],nw,w,NULL,cX,dw?NULL:cW,0); dw=1;
-    reds[ee]+=miHt(ht,cX,cW);
-    double sc=rels[ee]-reds[ee]/(double)e;
+   //WY x[ee] with w making the redundancy part
+   fillHt(ht,n,nx[ee],x[ee],nw,w,NULL,cX,dw?NULL:cW,0); dw=1;
+   reds[ee]+=miHt(ht,cX,cW);
+   double sc=rels[ee]-reds[ee]/(double)e;
 
-    if(sc>tbs){
-     tbs=sc; tbi=ee;
-    }
-   }
-   #pragma omp critical
-   if(tbs>bs){
-    bs=tbs; bi=tbi;
+   if(sc>tbs){
+    tbs=sc; tbi=ee;
    }
   }
-  w=x[bi]; nw=nx[bi]; x[bi]=NULL;
-  score[e]=bs; idx[e]=bi+1;
+  #pragma omp critical
+  if(tbs>bs){
+   bs=tbs; bi=tbi;
+  }
+  #pragma omp barrier
+  #pragma omp single
+  {
+   w=x[bi]; nw=nx[bi]; x[bi]=NULL;
+   score[e]=bs; idx[e]=bi+1;
+   bs=-INFINITY;
+  }
  }
 
+ Ans=finishAns(k,Ans,X);
  UNPROTECT(1);
  return(Ans);
 }

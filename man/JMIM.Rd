@@ -7,7 +7,7 @@
 JMIM(X, Y, k = 3)
 }
 \arguments{
-\item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo magical cutting).
+\item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo automatic categorisation; see below for details).
 \code{NA}s are not allowed.}
 
 \item{Y}{Decision attribute; should be given as a factor, but other options are accepted, exactly like for attributes.
@@ -17,14 +17,16 @@ JMIM(X, Y, k = 3)
 Must not exceed \code{ncol(X)}.}
 }
 \value{
-A list with two elements: \code{selection}, a vector of names of the selected features in the selection order (note that it may be shorter than \code{k}), and \code{scores}, a vector of feature scores.
+A list with two elements: \code{selection}, a vector of indices of the selected features in the selection order, and \code{score}, a vector of corresponding feature scores.
+Names of both vectors will correspond to the names of features in \code{X}.
+Both vectors will be at most of a length \code{k}, as the selection will stop as soon as all the remaining features will have a score of zero.
+This may happen during initial selection, in which case both vectors will be empty.
 }
 \description{
 The method starts with an attribute of a maximal mutual information with the decision \eqn{Y}.
 Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
 \deqn{J(X)=\min_{W\in S} I(X,W;Y),}
 where \eqn{S} is the set of already selected attributes.
-The method stops either when no initial attribute with positive mutual information with \eqn{Y} can be found, or after \code{k} attributes are found.
 }
 \note{
 \code{\link{NJMIM}} is a normalised version of JMIM; \code{\link{JMI}} and \code{\link{DISR}} are modifications of JMIM and NJMIM in which a sum of joint information over already selected attributes is used instead of a minimum.

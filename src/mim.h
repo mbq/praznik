@@ -12,7 +12,7 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  SEXP Ans; PROTECT(Ans=makeAns(k,&score,&idx));
 
  for(int e=0;e<k;e++){
-  score[e]=-INFINITY; idx[e]=0;
+  score[e]=0; idx[e]=-1;
  }
 
  #pragma omp parallel
@@ -34,6 +34,12 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
   }
   score[ee+1]=mi[e]; idx[ee+1]=e+1;
  }
+
+ int ke=0;
+ for(int e=0;e<k;e++){
+  if(idx[e]>0) ke++;
+ }
+ Ans=finishAns(ke,Ans,X);
 
  UNPROTECT(1);
  return(Ans);

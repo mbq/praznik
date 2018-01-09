@@ -4,7 +4,14 @@
 #include <R_ext/Utils.h>
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h> 
-#include <omp.h>
+
+#ifdef _OPENMP
+ #include <omp.h>
+#else
+ #define omp_get_thread_num() 0
+ #define omp_get_max_threads() 1
+ #define omp_set_num_threads(x)
+#endif
 
 //Hash table
 
@@ -17,10 +24,12 @@
 //Algorithms
 
 #include "cmim.h"
-#include "mi.h"
 #include "mim.h"
 #include "mrmr.h"
-#include "xj.h"
+#include "disr.h"
+#include "jmi.h"
+#include "jmim.h"
+#include "njmim.h"
 
 //Auxiliary
 
@@ -34,7 +43,6 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_getMi,2),
  CALLDEF(C_getNmi,2),
  CALLDEF(C_setOmpThreads,1),
- CALLDEF(C_MI,3),
  CALLDEF(C_CMIM,3),
  CALLDEF(C_JMI,3),
  CALLDEF(C_DISR,3),

@@ -23,7 +23,7 @@ pureMIM<-function(X,Y,k=3){
  sort(mim,decreasing=TRUE)[1:k]->ans
  list(
   selection=names(ans),
-  scores=setNames(ans,NULL)
+  score=setNames(ans,NULL)
  )
 }
 
@@ -47,7 +47,7 @@ pureCMIM<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -73,7 +73,7 @@ pureJMIM<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -99,7 +99,7 @@ pureNJMIM<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -120,7 +120,7 @@ pureJMI<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -145,7 +145,7 @@ pureMRMR<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=fscores
+  score=fscores
  )
 }
 
@@ -168,7 +168,7 @@ pureDISR<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=fscores
+  score=fscores
  )
 }
 

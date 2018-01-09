@@ -1,3 +1,10 @@
+Changes in 3.0:
+ - Installation possible without OpenMP support.
+ - Fixed segfault in NJMIM/JMIM for certain, specific inputs.
+ - Faster internal hash table.
+ - Faster CMIM/NJMIM/JMIM due to Fleuret's algorithm.
+ - New output format.
+
 Changes in 2.0:
  - OpenMP parallelism in all praznik functions.
  - Fixed segfault for constant numerical features. Thanks to 
