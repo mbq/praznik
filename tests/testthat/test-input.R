@@ -35,8 +35,7 @@ test_that("Nameless data.frames",{
 test_that("Constant real features work",{
  #Throws segfault in 1.0.0
  MIM(data.frame(a=rep(1,150)),iris$Species,1)->ans
- expect_equal(names(ans$selection),"a")
- expect_equal(ans$score,c(a=0))
+ expect_equal(length(ans$selection),0)
 })
 
 test_that("Zero-score features work",{
@@ -52,6 +51,14 @@ test_that("Zero-score features work",{
   expect_true(all(names(ans$selection)%in%names(X)))
   expect_false(any(duplicated(ans$selection)))
  }
+})
+
+test_that("MIM works with zero-score features",{
+ #Tests for the following error reported by smilesun:
+ # https://github.com/mbq/praznik/issues/9
+ x<-data.frame(a=rep(1,150),b=rep(2,150),c=rep(3,150))
+ y<-iris$Species
+ expect_identical(MIM(x,y,3),DISR(x,y,3))
 })
 
 test_that("X must be only reals, booleans, integers or factors",{

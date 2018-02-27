@@ -135,7 +135,7 @@ SEXP finishAns(int k,SEXP Ans,SEXP X){
  }
  //X is a data.frame, does it have names?
  SEXP Xn=getAttrib(X,R_NamesSymbol);
- if(!isNull(Xn)){
+ if(!isNull(Xn) && (k>0)){
   //Copy names into names of scores and selection
   SEXP An; PROTECT(An=allocVector(STRSXP,k));
   int *idx=INTEGER(VECTOR_ELT(Ans,0));
