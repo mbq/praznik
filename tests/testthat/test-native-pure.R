@@ -15,3 +15,9 @@ for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMIM","MRMR")){
  })
 }
 
+test_that("mi works like pure mi",{
+ expect_equal(
+  apply(X,2,mutinfo,Y),
+  .Call(C_mi,X,Y)
+ )
+})
