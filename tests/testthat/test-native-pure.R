@@ -21,3 +21,11 @@ test_that("mi works like pure mi",{
   .Call(C_mi,X,Y)
  )
 })
+
+test_that("cmi works like pure cmi",{
+ Z<-factor((1:150)%%7)
+ expect_equal(
+  apply(X,2,condmutinfo,Y,Z),
+  cmi(X,Y,Z)
+ )
+})

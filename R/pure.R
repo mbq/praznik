@@ -10,6 +10,10 @@ mutinfo<-function(x,y)
 nmutinfo<-function(x,y)
  .Call(C_getNmi,factor(x),factor(y))
 
+condmutinfo<-function(x,y,z)
+ .Call(C_getMi,factor(x),factor(sprintf("%s%s",y,z)))-
+ .Call(C_getMi,factor(x),factor(z))
+
 cmutinfo<-function(a,b,c){
  a<-factor(a)
  b<-factor(b)
