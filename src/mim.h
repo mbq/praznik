@@ -12,7 +12,7 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  SEXP Ans; PROTECT(Ans=makeAns(k,&score,&idx));
 
  for(int e=0;e<k;e++){
-  score[e]=0; idx[e]=-1;
+  score[e]=0.; idx[e]=-1;
  }
 
  #pragma omp parallel
@@ -27,7 +27,7 @@ SEXP C_MIM(SEXP X,SEXP Y,SEXP K){
  }
 
  //Insertion sort since we need stable sort in principle
- for(int e=0;e<m;e++) if(score[k-1]<=mi[e]){
+ for(int e=0;e<m;e++) if(score[k-1]<mi[e]){
   int ee;
   for(ee=k-2;ee>=0 && score[ee]<mi[e];ee--){
    score[ee+1]=score[ee]; idx[ee+1]=idx[ee];
