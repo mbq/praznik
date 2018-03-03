@@ -34,6 +34,7 @@
 //Feature scoring algorithms
 
 #include "mi.h"
+#include "cmi.h"
 
 //Auxiliary
 
@@ -55,6 +56,7 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_MIM,3),
  CALLDEF(C_MRMR,3),
  CALLDEF(C_mi,2),
+ CALLDEF(C_cmi_jmi,4),
  {NULL,NULL,0}
 };
 

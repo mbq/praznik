@@ -22,7 +22,7 @@ mi<-function(X,Y)
 #' mi(iris[,-5],iris$Species)
 #' @export
 cmi<-function(X,Y,Z)
- mi(X,factor(sprintf("%s%s",Y,Z)))-mi(X,Z) #TODO: Replace placeholder
+ .Call(C_cmi_jmi,X,Y,Z,1L)
 
 #TODO: Remove this stuff?
 #TODO: NJMI could be useful
