@@ -1,34 +1,60 @@
 context("test-native-pure.R")
 
-makeIn<-function(){
- #Generate iris with nonsense data, with rows and cols in random order
- is<-iris[sample(nrow(iris),nrow(iris)),]
- X<-cbind(is[,-5],apply(is[,rep(1:4,each=3)],2,sample))
- names(X)<-c(names(is)[-5],sprintf("Nonsense%d",1:(ncol(X)-4)))
- X[,sample(ncol(X),ncol(X))]->X
- Y<-is$Species
+data.frame(apply(iris[,-5],2,cut,10))->X
+X$const<-factor(rep(1,150))
+X$tri<-factor(rep(1:3,50))
+Y<-iris$Species
+list(X=X,Y=Y,k=4)->input
 
- #Make it discrete
- X<-data.frame(apply(X,2,cut,10))
-
- #Value of k for all tests
- K<-7
- list(X=X,Y=Y,k=K)
-}
-
-fuzz<-function(algo,seed){
- set.seed(seed)
- makeIn()->input
- test_that(sprintf("Native %s works like pure %s, seed %d",algo,algo,seed),{
+for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMIM","MRMR")){
+ test_that(sprintf("Native %s works like pure %s",algo,algo),{
   do.call(sprintf("pure%s",algo),input)->pure
   do.call(algo,input)->native
-  expect_equal(pure$scores,native$scores)
-  expect_equal(pure$selection,native$selection)
+  expect_equal(pure$score,setNames(native$score,NULL))
+  expect_equal(pure$selection,names(native$selection))
  })
 }
 
-for(seed in 1:5)
- for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMI","CMIM","MRMR"))
-  fuzz(algo,seed)
+test_that("mi works like pure mi",{
+ expect_equal(
+  apply(X,2,mutinfo,Y),
+  miScores(X,Y)
+ )
+})
 
+test_that("cmi works like pure cmi",{
+ Z<-factor((1:150)%%7)
+ expect_equal(
+  apply(X,2,condmutinfo,Y,Z),
+  cmiScores(X,Y,Z)
+ )
+})
+
+test_that("cmi behaves properly",{
+ expect_equal(
+  cmiScores(X,Y,factor(1:150)),
+  apply(X,2,function(x) 0)
+ )
+ expect_equal(
+  cmiScores(X,Y,factor(rep("Q",150))),
+  miScores(X,Y)
+ )
+})
+
+test_that("jmi behaves properly",{
+ Z<-factor((1:150)%%7)
+ expect_equal(
+  jmiScores(X,Y,factor(1:150)),
+  setNames(rep(miScores(data.frame(Y),Y),ncol(X)),names(X))
+ )
+ expect_equal(
+  jmiScores(X,Y,Z),
+  cmiScores(X,Y,Z)+miScores(data.frame(Y),Z)
+ )
+ for(e in 1:ncol(X))
+  expect_equal(
+   miScores(X,Y)[e],
+   jmiScores(X,Y,X[,e])[e]
+  )
+})
 

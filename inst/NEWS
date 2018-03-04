@@ -1,2 +1,19 @@
+Changes in 4.0:
+ - Fixed MIM handing of many features with zero score; thanks 
+ to smilesun for spotting this.
+ - MI, CMI, JMI and NJMI feature scorers.
+
+Changes in 3.0:
+ - Installation possible without OpenMP support.
+ - Fixed segfault in NJMIM/JMIM for certain, specific inputs.
+ - Faster internal hash table.
+ - Faster CMIM/NJMIM/JMIM due to Fleuret's algorithm.
+ - New output format.
+
+Changes in 2.0:
+ - OpenMP parallelism in all praznik functions.
+ - Fixed segfault for constant numerical features. Thanks to 
+ alecuba16 for spotting this.
+
 Changes in 1.0:
  - First public release.

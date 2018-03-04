@@ -10,6 +10,10 @@ mutinfo<-function(x,y)
 nmutinfo<-function(x,y)
  .Call(C_getNmi,factor(x),factor(y))
 
+condmutinfo<-function(x,y,z)
+ .Call(C_getMi,factor(x),factor(sprintf("%s%s",y,z)))-
+ .Call(C_getMi,factor(x),factor(z))
+
 cmutinfo<-function(a,b,c){
  a<-factor(a)
  b<-factor(b)
@@ -23,7 +27,7 @@ pureMIM<-function(X,Y,k=3){
  sort(mim,decreasing=TRUE)[1:k]->ans
  list(
   selection=names(ans),
-  scores=setNames(ans,NULL)
+  score=setNames(ans,NULL)
  )
 }
 
@@ -47,7 +51,7 @@ pureCMIM<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -73,7 +77,7 @@ pureJMIM<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -99,27 +103,7 @@ pureNJMIM<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
- )
-}
-
-pureCMI<-function(X,Y,k=3){
- X<-data.frame(X)
- S<-factor(rep(1,nrow(X)))
- selection<-c()
- ascores<-c()
- for(e in 1:k){
-  apply(X,2,cmutinfo,Y,S)->scores
-  if(max(scores)==0) break
-  sel<-names(which.max(scores))
-  selection<-c(selection,sel)
-  ascores<-c(ascores,max(scores))
-  S<-mergef(S,factor(X[,sel]))
-  X[,colnames(X)!=sel,drop=FALSE]->X
- }
- list(
-  selection=selection,
-  scores=setNames(ascores,NULL)
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -140,55 +124,7 @@ pureJMI<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=setNames(fscores,NULL)
- )
-}
-
-#Verifiable with BetaGamma(Gamma=0,Beta=beta)
-pureMIFS<-function(X,Y,k=3,beta=1){
- if(beta==0) return(pureMIM(X,Y,k))
- X<-data.frame(X)
- ascores<-apply(X,2,mutinfo,Y)
- selection<-names(which.max(ascores))
- fscores<-max(ascores)
- if(k>1) for(e in 1:(k-1)){
-  factor(X[,tail(selection,1)])->x
-  ascores[colnames(X)!=tail(selection,1)]->ascores
-  X[,colnames(X)!=tail(selection,1),drop=FALSE]->X
-
-  apply(X,2,function(xx) mutinfo(x,factor(xx)))->scores
-  ascores<-ascores-beta*scores
-
-  selection<-c(selection,names(which.max(ascores)))
-  fscores<-c(fscores,max(ascores))
- }
- list(
-  selection=selection,
-  scores=fscores
- )
-}
-
-pureBetaGamma<-function(X,Y,k=3,beta=1,gamma=1){
- if(gamma==0) return(pureMIFS(X,Y,k,beta))
- X<-data.frame(X)
- ascores<-apply(X,2,mutinfo,Y)
- selection<-names(which.max(ascores))
- fscores<-max(ascores)
- if(k>1) for(e in 1:(k-1)){
-  factor(X[,tail(selection,1)])->x
-  ascores[colnames(X)!=tail(selection,1)]->ascores
-  X[,colnames(X)!=tail(selection,1),drop=FALSE]->X
-
-  apply(X,2,function(xx) mutinfo(x,factor(xx)))->crossMi
-  apply(X,2,function(xx) cmutinfo(x,factor(xx),Y))->crossCmi
-  ascores<-ascores-beta*crossMi+gamma*crossCmi
-
-  selection<-c(selection,names(which.max(ascores)))
-  fscores<-c(fscores,max(ascores))
- }
- list(
-  selection=selection,
-  scores=fscores
+  score=setNames(fscores,NULL)
  )
 }
 
@@ -213,32 +149,7 @@ pureMRMR<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=fscores
- )
-}
-
-puremRMR_D<-function(X,Y,k=3){
- X<-data.frame(X)
- jscores<-apply(X,2,mutinfo,Y)
- bscores<-rep(0,ncol(X))
- selection<-names(which.max(jscores))
- fscores<-max(jscores)
- if(k>1) for(e in 1:(k-1)){
-  factor(X[,tail(selection,1)])->x
-  jscores[colnames(X)!=tail(selection,1)]->jscores
-  bscores[colnames(X)!=tail(selection,1)]->bscores
-  X[,colnames(X)!=tail(selection,1),drop=FALSE]->X
-
-  apply(X,2,function(xx) mutinfo(x,factor(xx)))->scores
-  bscores<-bscores+scores
-  ascores<-jscores-bscores/e
-  
-  selection<-c(selection,names(which.max(ascores)))
-  fscores<-c(fscores,max(ascores))
- }
- list(
-  selection=selection,
-  scores=fscores
+  score=fscores
  )
 }
 
@@ -261,8 +172,7 @@ pureDISR<-function(X,Y,k=3){
  }
  list(
   selection=selection,
-  scores=fscores
+  score=fscores
  )
 }
 
-#Note: CondMI can stop at zero; others will either return nothing (for 0 in the initial MI scan) or k. Methods with negative scores will be even able to jump through zero.

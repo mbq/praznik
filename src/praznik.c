@@ -5,6 +5,14 @@
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h> 
 
+#ifdef _OPENMP
+ #include <omp.h>
+#else
+ #define omp_get_thread_num() 0
+ #define omp_get_max_threads() 1
+ #define omp_set_num_threads(x)
+#endif
+
 //Hash table
 
 #include "ht.h"
@@ -13,14 +21,20 @@
 
 #include "shared.h"
 
-//Algorithms
+//Feature selection algorithms
 
-#include "cmi.h"
 #include "cmim.h"
-#include "mi.h"
 #include "mim.h"
 #include "mrmr.h"
-#include "xj.h"
+#include "disr.h"
+#include "jmi.h"
+#include "jmim.h"
+#include "njmim.h"
+
+//Feature scoring algorithms
+
+#include "mi.h"
+#include "cmi.h"
 
 //Auxiliary
 
@@ -33,15 +47,16 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_engineTest,2),
  CALLDEF(C_getMi,2),
  CALLDEF(C_getNmi,2),
- CALLDEF(C_MI,3),
+ CALLDEF(C_setOmpThreads,1),
  CALLDEF(C_CMIM,3),
- CALLDEF(C_CMI,3),
  CALLDEF(C_JMI,3),
  CALLDEF(C_DISR,3),
  CALLDEF(C_JMIM,3),
  CALLDEF(C_NJMIM,3),
  CALLDEF(C_MIM,3),
  CALLDEF(C_MRMR,3),
+ CALLDEF(C_mi,2),
+ CALLDEF(C_cmi_jmi,4),
  {NULL,NULL,0}
 };
 

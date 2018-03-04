@@ -1,12 +1,13 @@
 Package: praznik
 Type: Package
-Title: Collection of information-based feature selection filters
-Version: 0.9.0
+Title: Collection of Information-Based Feature Selection Filters
+Version: 4.0.0
+Depends: R (>= 2.10)
 Author: Miron B. Kursa
 Maintainer: Miron B. Kursa <M.Kursa@icm.edu.pl>
 License: GPL-3
-Description: A collection of feature selection methods inspired by the FEAST library.
- Provides efficient implementations of several information-based filter methods, including CMIM, DISR, JMI, JMIM and mRMR.
+Description: A collection of feature selection filters performing greedy optimisation of mutual information-based usefulness criteria, inspired by the overview by Brown, Pocock, Zhao and Lujan (2012) <http://www.jmlr.org/papers/v13/brown12a.html>.
+ Implements, among other, minimum redundancy maximal relevancy ('mRMR') method by Peng, Long and Ding (2005) <doi:10.1109/TPAMI.2005.159>; joint mutual information ('JMI') method by Yang and Moody (1999) <http://papers.nips.cc/paper/1779-data-visualization-and-feature-selection-new-algorithms-for-nongaussian-data>; double input symmetrical relevance ('DISR') method by Meyer and Bontempi  (2006) <doi:10.1007/11732242_9> as well as joint mutual information maximisation ('JMIM') method by Bennasar, Hicks and Setchi (2015) <doi:10.1016/j.eswa.2015.07.007>.
 BugReports: https://github.com/mbq/praznik/issues
 URL: https://github.com/mbq/praznik
 RoxygenNote: 6.0.1
