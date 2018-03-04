@@ -18,6 +18,7 @@ A numerical vector with mutual information scores, with names copied from \code{
 }
 \description{
 Calculates mutual information between each attribute and the decision, that is
+\deqn{I(X,Y).}
 }
 \note{
 The method requires input to be discrete to use empirical estimators of distribution, and, consequently, information gain or entropy.
