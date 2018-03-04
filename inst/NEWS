@@ -1,3 +1,8 @@
+Changes in 4.0:
+ - Fixed MIM handing of many features with zero score; thanks 
+ to smilesun for spotting this.
+ - MI, CMI, JMI and NJMI feature scorers.
+
 Changes in 3.0:
  - Installation possible without OpenMP support.
  - Fixed segfault in NJMIM/JMIM for certain, specific inputs.
