@@ -5,11 +5,10 @@
 #' @template input
 #' @return A numerical vector with mutual information scores, with names copied from \code{X}.
 #' @examples
-#' mi(iris[,-5],iris$Species)
+#' miScores(iris[,-5],iris$Species)
 #' @export
-mi<-function(X,Y)
+miScores<-function(X,Y)
  .Call(C_mi,X,Y)
-
 
 #' Calculate conditional mutual information of all features
 #'
@@ -19,13 +18,10 @@ mi<-function(X,Y)
 #' @param Z Condition; should be given as a factor, but other options are accepted, as for attributes. 
 #' @return A numerical vector with conditional mutual information scores, with names copied from \code{X}.
 #' @examples
-#' mi(iris[,-5],iris$Species)
+#' cmiScores(iris[,-5],iris$Species,iris$Sepal.Length)
 #' @export
-cmi<-function(X,Y,Z)
- .Call(C_cmi_jmi,X,Y,Z,1L)
-
-#TODO: Remove this stuff?
-#TODO: NJMI could be useful
+cmiScores<-function(X,Y,Z)
+ .Call(C_cmi_jmi,X,Y,Z,791L)
 
 #' Calculate joint mutual information of all features
 #'
@@ -37,8 +33,21 @@ cmi<-function(X,Y,Z)
 #' @param Z Other vector; should be given as a factor, but other options are accepted, as for attributes. 
 #' @return A numerical vector with joint mutual information scores, with names copied from \code{X}.
 #' @examples
-#' mi(iris[,-5],iris$Species)
-jmi<-function(X,Y,Z)
- mi(X,factor(sprintf("%s%s",Y,Z)))-mi(X,Z)-mi(data.frame(Y),Z) #TODO: Replace placeholder
+#' jmiScores(iris[,-5],iris$Species,iris$Sepal.Length)
+#' @export
+jmiScores<-function(X,Y,Z)
+ .Call(C_cmi_jmi,X,Y,Z,792L)
 
-
+#' Calculate normalised joint mutual information of all features
+#'
+#' Calculated normalised mutual information between each attribute joint with some other vector \code{Z} with the decision, that is
+#' \deqn{\frac{I(X,Z;Y)}{H(X,Y,Z)}.}
+#' This is the same as in the criterion used by \code{\link{DISR}} and \code{\link{NJMIM}}.
+#' @template input
+#' @param Z Other vector; should be given as a factor, but other options are accepted, as for attributes. 
+#' @return A numerical vector with the normalised joint mutual information scores, with names copied from \code{X}.
+#' @examples
+#' njmiScores(iris[,-5],iris$Species,iris$Sepal.Length)
+#' @export
+njmiScores<-function(X,Y,Z)
+ .Call(C_cmi_jmi,X,Y,Z,793L)
