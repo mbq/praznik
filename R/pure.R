@@ -1,3 +1,5 @@
+# Pure R implementations of selection methods --- for testing only
+
 #' @importFrom stats setNames
 #' @importFrom utils tail
 

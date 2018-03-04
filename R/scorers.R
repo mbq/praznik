@@ -1,7 +1,9 @@
+# Feature scorers
+
 #' Calculate mutual information of all features
 #'
 #' Calculates mutual information between each attribute and the decision, that is
-#; \deqn{I(X,Y).}
+#' \deqn{I(X,Y).}
 #' @template input
 #' @return A numerical vector with mutual information scores, with names copied from \code{X}.
 #' @examples
@@ -26,9 +28,9 @@ cmiScores<-function(X,Y,Z)
 #' Calculate joint mutual information of all features
 #'
 #' Calculated mutual information between each attribute joint with some other vector \code{Z} with the decision, that is
-#' \deqn{I(XZ,Y).}
-#' This is the same as conditional mutual information between X and Y plus a constant that depends on Y and Z, i.e.:
-#' \deqn{I(XZ,Y)=I(X;Y|Z)+I(Y;Z).}
+#' \deqn{I(X,Z;Y).}
+#' This is the same as conditional mutual information between X and Y plus a constant that depends on Y and Z, that is
+#' \deqn{I(X,Z;Y)=I(X;Y|Z)+I(Y;Z).}
 #' @template input
 #' @param Z Other vector; should be given as a factor, but other options are accepted, as for attributes. 
 #' @return A numerical vector with joint mutual information scores, with names copied from \code{X}.
