@@ -57,6 +57,9 @@ The package also provides functions for scoring features.
 Estimation of mutual information and its generalisations is a hard task; still, praznik aims at speed and simplicity and hence only offers basic, maximum likelihood estimator applicable on discrete data.
 For convenience, praznik automatically and silently coerces non-factor inputs into about equally-spaced bins, following the heuristic often used in literature.
 }
+\references{
+"Conditional Likelihood Maximisation: A Unifying Framework for Information Theoretic Feature Selection" G. Brown et al. JMLR (2012).
+}
 \seealso{
 Useful links:
 \itemize{
