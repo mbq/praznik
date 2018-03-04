@@ -21,7 +21,7 @@
 
 #include "shared.h"
 
-//Algorithms
+//Feature selection algorithms
 
 #include "cmim.h"
 #include "mim.h"
@@ -30,6 +30,11 @@
 #include "jmi.h"
 #include "jmim.h"
 #include "njmim.h"
+
+//Feature scoring algorithms
+
+#include "mi.h"
+#include "cmi.h"
 
 //Auxiliary
 
@@ -50,6 +55,8 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_NJMIM,3),
  CALLDEF(C_MIM,3),
  CALLDEF(C_MRMR,3),
+ CALLDEF(C_mi,2),
+ CALLDEF(C_cmi_jmi,4),
  {NULL,NULL,0}
 };
 

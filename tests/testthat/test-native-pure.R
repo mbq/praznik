@@ -15,3 +15,46 @@ for(algo in c("MIM","JMIM","NJMIM","JMI","DISR","CMIM","MRMR")){
  })
 }
 
+test_that("mi works like pure mi",{
+ expect_equal(
+  apply(X,2,mutinfo,Y),
+  miScores(X,Y)
+ )
+})
+
+test_that("cmi works like pure cmi",{
+ Z<-factor((1:150)%%7)
+ expect_equal(
+  apply(X,2,condmutinfo,Y,Z),
+  cmiScores(X,Y,Z)
+ )
+})
+
+test_that("cmi behaves properly",{
+ expect_equal(
+  cmiScores(X,Y,factor(1:150)),
+  apply(X,2,function(x) 0)
+ )
+ expect_equal(
+  cmiScores(X,Y,factor(rep("Q",150))),
+  miScores(X,Y)
+ )
+})
+
+test_that("jmi behaves properly",{
+ Z<-factor((1:150)%%7)
+ expect_equal(
+  jmiScores(X,Y,factor(1:150)),
+  setNames(rep(miScores(data.frame(Y),Y),ncol(X)),names(X))
+ )
+ expect_equal(
+  jmiScores(X,Y,Z),
+  cmiScores(X,Y,Z)+miScores(data.frame(Y),Z)
+ )
+ for(e in 1:ncol(X))
+  expect_equal(
+   miScores(X,Y)[e],
+   jmiScores(X,Y,X[,e])[e]
+  )
+})
+

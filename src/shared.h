@@ -48,14 +48,18 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
 void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx,int nt){
  if(!isFrame(X)) error("X must be a data.frame");
  *n=length(Y);
- *k=INTEGER(K)[0];
  *m=length(X);
-
- if(*k>*m) error("Parameter k must be at most the number of attributes");
- if(*k<1) error("Parameter k must be positive");
+ if(*m==0) error("Cannot select from a data.frame without columns");
  if(n[0]>2147483648) error("Only at most 2^31 (2.1 billion) objects allowed");
- //TODO: Also eat matrices? --> then fix it
  if(*n!=length(VECTOR_ELT(X,0))) error("X and Y size mismatch");
+
+ if(k){
+  //When k is NULL, don't even look at K -- useful for routines which does 
+  // not use the K parameter
+  *k=INTEGER(K)[0];
+  if(*k<1) error("Parameter k must be positive");
+  if(*k>*m) error("Parameter k must be at most the number of attributes");
+ }
 
  for(int e=0;e<nt;e++)
   ht[e]=R_allocHt(*n);
