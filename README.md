@@ -1,7 +1,7 @@
-# praznik [![CRAN downloads](http://cranlogs.r-pkg.org/badges/praznik)](http://cran.rstudio.com/web/packages/praznik/index.html) [![Build Status](https://travis-ci.org/mbq/praznik.svg?branch=master)](https://travis-ci.org/mbq/praznik) [![Devel Build Status](https://travis-ci.org/mbq/praznik.svg?branch=devel)](https://travis-ci.org/mbq/praznik)
+# praznik [![CRAN downloads](http://cranlogs.r-pkg.org/badges/praznik)](http://cran.rstudio.com/web/packages/praznik/index.html) [![Build Status](https://travis-ci.org/mbq/praznik.svg?branch=master)](https://travis-ci.org/mbq/praznik) [![Devel Build Status](https://travis-ci.org/mbq/praznik.svg?branch=devel)](https://travis-ci.org/mbq/praznik) [![AppVeyor Devel Build Status](https://ci.appveyor.com/api/projects/status/github/mbq/praznik?branch=devel&svg=true)](https://ci.appveyor.com/project/mbq/praznik)
 
 Praznik is an R package containing a collection of information-based, feature selection filter methods.
-It provides efficient implementations of several information-based filter methods, including CMIM, DISR, JMI, JMIM and mRMR.
+It provides efficient implementations of several information-based filter methods, including CMIM, DISR, JMI, JMIM and mRMR, as well as corresponding feature scorers allowing for experiments.
 
 You can install from [CRAN](https://cran.r-project.org/package=praznik), or directly from GitHub with:
 
