@@ -1,3 +1,8 @@
+int nok(double x){
+ double xx=fabs(x);
+ return((xx>1e-14)&&(xx<1e300));
+}
+
 int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
  int lc=length(getAttrib(in,R_LevelsSymbol)),*out;
  if(isFactor(in) && lc<n){
@@ -37,8 +42,17 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
   }else{
    *nout=n/3;
   }
-  for(int e=0;e<n;e++)
-   out[e]=((int)((x[e]-min)/(max-min)*(double)(*nout)))%(*nout)+1;
+  //Cut, like R's cut(x,nout) would; but only if max and min are numerically ok
+  if(nok(max) && nok(min)){
+   min=min-(max-min)/1000.;
+   max=max+(max-min)/1000.;
+  }
+  for(int e=0;e<n;e++){
+   out[e]=(int)((x[e]-min)/(max-min)*(double)(*nout))+1;
+   //Survive numerical errors
+   if(out[e]>*nout) out[e]=*nout;
+   if(out[e]<1) out[e]=1;
+  }
   return(out);
  }
  //Other stuff

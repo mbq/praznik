@@ -39,6 +39,35 @@ test_that("Constant real features work",{
  expect_equal(length(ans$selection),0)
 })
 
+test_that("Crazy-double valued features work",{
+ Y<-factor(c("a","b"))
+ X<-data.frame(
+  a=c(0,.1),
+  b=c(.Machine$double.eps,.Machine$double.neg.eps),
+  c=c(.Machine$double.neg.eps,0),
+  d=c(.Machine$double.eps,0),
+  e=c(.Machine$double.xmax,.Machine$double.xmin),
+  f=c(.Machine$double.eps,.Machine$double.xmin),
+  g=c(.Machine$double.eps,.Machine$double.xmax),
+  h=c(.Machine$double.neg.eps,.Machine$double.xmin),
+  i=c(.Machine$double.neg.eps,.Machine$double.xmax),
+  j=c(0,.Machine$double.xmin),
+  k=c(0,.Machine$double.xmax),
+  l=c(-1,.Machine$double.xmax)
+ )
+ expect_equal(
+  miScores(X,Y),
+  setNames(rep(log(2),ncol(X)),names(X))
+ )
+})
+
+test_that("Magical cut works like R cut",{
+ expect_equal(
+  miScores(iris[,-5],iris$Species),
+  miScores(data.frame(apply(iris[,-5],2,cut,10)),iris$Species)
+ )
+})
+
 test_that("Zero-score features work",{
  expand.grid(a=c(T,F),b=c(T,F),n1=c(T,F),n2=c(T,F),n3=c(T,F))->X
  X$aub<-X$a|X$b
