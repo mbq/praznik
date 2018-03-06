@@ -21,7 +21,7 @@
 
 #include "shared.h"
 
-//Algorithms
+//Feature selection algorithms
 
 #include "cmim.h"
 #include "mim.h"
@@ -30,6 +30,11 @@
 #include "jmi.h"
 #include "jmim.h"
 #include "njmim.h"
+
+//Feature scoring algorithms
+
+#include "mi.h"
+#include "cmi.h"
 
 //Auxiliary
 
@@ -42,14 +47,15 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_engineTest,2),
  CALLDEF(C_getMi,2),
  CALLDEF(C_getNmi,2),
- CALLDEF(C_setOmpThreads,1),
- CALLDEF(C_CMIM,3),
- CALLDEF(C_JMI,3),
- CALLDEF(C_DISR,3),
- CALLDEF(C_JMIM,3),
- CALLDEF(C_NJMIM,3),
- CALLDEF(C_MIM,3),
- CALLDEF(C_MRMR,3),
+ CALLDEF(C_CMIM,4),
+ CALLDEF(C_JMI,4),
+ CALLDEF(C_DISR,4),
+ CALLDEF(C_JMIM,4),
+ CALLDEF(C_NJMIM,4),
+ CALLDEF(C_MIM,4),
+ CALLDEF(C_MRMR,4),
+ CALLDEF(C_mi,3),
+ CALLDEF(C_cmi_jmi,5),
  {NULL,NULL,0}
 };
 

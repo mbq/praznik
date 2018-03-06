@@ -45,22 +45,37 @@ int *convertSEXP(struct ht *ht,int n,SEXP in,int *nout){
  return(NULL);
 }
 
-void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx,int nt){
+void prepareInput(SEXP X,SEXP Y,SEXP K,SEXP Threads,struct ht ***ht,int *n,int *m,int *k,int **y,int *ny,int ***x,int **nx,int *nt){
  if(!isFrame(X)) error("X must be a data.frame");
  *n=length(Y);
- *k=INTEGER(K)[0];
  *m=length(X);
-
- if(*k>*m) error("Parameter k must be at most the number of attributes");
- if(*k<1) error("Parameter k must be positive");
+ if(*m==0) error("Cannot select from a data.frame without columns");
  if(n[0]>2147483648) error("Only at most 2^31 (2.1 billion) objects allowed");
- //TODO: Also eat matrices? --> then fix it
  if(*n!=length(VECTOR_ELT(X,0))) error("X and Y size mismatch");
 
- for(int e=0;e<nt;e++)
-  ht[e]=R_allocHt(*n);
+ if(k){
+  //When k is NULL, don't even look at K -- useful for routines which does 
+  // not use the K parameter
+  *k=INTEGER(K)[0];
+  if(*k<1) error("Parameter k must be positive");
+  if(*k>*m) error("Parameter k must be at most the number of attributes");
+ }
 
- *y=convertSEXP(*ht,*n,Y,ny);
+ if(isInteger(Threads) && length(Threads)!=1) error("Invalid threads argument");
+ *nt=INTEGER(Threads)[0];
+ if(*nt<0) error("Invalid threads argument");
+ if(*nt>omp_get_max_threads()){
+  *nt=omp_get_max_threads();
+  warning("Thread count capped to %d",*nt);
+ }
+ if(*nt==0) *nt=omp_get_max_threads();
+
+ *ht=(struct ht**)R_alloc(sizeof(void*),*nt);
+
+ for(int e=0;e<*nt;e++)
+  (*ht)[e]=R_allocHt(*n);
+
+ *y=convertSEXP(**ht,*n,Y,ny);
  if(!*y) error("Wrong Y type");
  
  *nx=(int*)R_alloc(sizeof(int),*m);
@@ -68,7 +83,7 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,struct ht **ht,int *n,int *m,int *k,int *
  for(int e=0;e<*m;e++){
   SEXP XX;
   PROTECT(XX=VECTOR_ELT(X,e));
-  (*x)[e]=convertSEXP(*ht,*n,XX,(*nx)+e);
+  (*x)[e]=convertSEXP(**ht,*n,XX,(*nx)+e);
   if(!(*x)[e]) error("Wrong X[,%d] type",e+1);
   UNPROTECT(1);
  }
@@ -78,7 +93,7 @@ void static inline initialMiScan(struct ht **hta,int n,int m,int *y,int ny,int *
  int *cXc=(int*)R_alloc(sizeof(int),n*nt); if(_cX) *_cX=cXc;
  int *cYc=(int*)R_alloc(sizeof(int),n*nt); if(_cY) *_cY=cYc;
 
- #pragma omp parallel 
+ #pragma omp parallel num_threads(nt)
  {
   double tbs=0.;
   int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),madeCy=0,tbi=-1;
@@ -135,7 +150,7 @@ SEXP finishAns(int k,SEXP Ans,SEXP X){
  }
  //X is a data.frame, does it have names?
  SEXP Xn=getAttrib(X,R_NamesSymbol);
- if(!isNull(Xn)){
+ if(!isNull(Xn) && (k>0)){
   //Copy names into names of scores and selection
   SEXP An; PROTECT(An=allocVector(STRSXP,k));
   int *idx=INTEGER(VECTOR_ELT(Ans,0));

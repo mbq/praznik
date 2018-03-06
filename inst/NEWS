@@ -1,3 +1,10 @@
+Changes in 4.0:
+ - MI, CMI, JMI and NJMI feature scorers.
+ - Parallelism is now controlled by threads argument.
+ - Documentation improvements.
+ - Fixed MIM handing of many features with zero score; thanks 
+ to smilesun for spotting this.
+
 Changes in 3.0:
  - Installation possible without OpenMP support.
  - Fixed segfault in NJMIM/JMIM for certain, specific inputs.

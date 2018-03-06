@@ -1,12 +1,13 @@
 context("test-input.R")
 
-test_that("crazy decision works",{
+test_that("Crazy decision works",{
  data.frame(A=rep(letters[1:2],each=20))->X
  rep(c(TRUE,FALSE),each=20)->Y
  expect_equal(names(MIM(X,Y,1)$selection),"A")
+ expect_equal(MIM(X,rep(-.7,40),1),list(selection=integer(0),score=numeric(0)))
 })
 
-test_that("crazy attributes work",{
+test_that("Crazy attributes work",{
  badfactor<-factor(c(rep(c("z","a"),each=7),letters))[1:14]
  data.frame(
   bool=rep(c(TRUE,FALSE),each=7),
@@ -19,11 +20,11 @@ test_that("crazy attributes work",{
  expect_equal(setNames(S$score,NULL),setNames(rep(S$score[1],3),NULL))
 })
 
-test_that("X must be a data.frame",{
+test_that("X must be a data.frame is thrown",{
  expect_error(MIM(list(1:3),NULL,NULL),"X must be a data.frame")
 })
 
-test_that("Nameless data.frames",{
+test_that("Nameless data.frames work",{
  z<-iris[,-5]
  names(z)<-NULL
  JMI(z,iris$Species,4)->ans
@@ -35,8 +36,7 @@ test_that("Nameless data.frames",{
 test_that("Constant real features work",{
  #Throws segfault in 1.0.0
  MIM(data.frame(a=rep(1,150)),iris$Species,1)->ans
- expect_equal(names(ans$selection),"a")
- expect_equal(ans$score,c(a=0))
+ expect_equal(length(ans$selection),0)
 })
 
 test_that("Zero-score features work",{
@@ -54,7 +54,15 @@ test_that("Zero-score features work",{
  }
 })
 
-test_that("X must be only reals, booleans, integers or factors",{
+test_that("MIM works with zero-score features",{
+ #Tests for the following error reported by smilesun:
+ # https://github.com/mbq/praznik/issues/9
+ x<-data.frame(a=rep(1,150),b=rep(2,150),c=rep(3,150))
+ y<-iris$Species
+ expect_identical(MIM(x,y,3),DISR(x,y,3))
+})
+
+test_that("X and Y must be only reals, booleans, integers or factors",{
  Y<-c(TRUE,TRUE,FALSE,FALSE,FALSE)
  li<-data.frame(A=1:5)
  li$A<-list(1,1:2,1:3,1:4,1:5)
@@ -67,6 +75,8 @@ test_that("X must be only reals, booleans, integers or factors",{
  )
  for(X in badX)
   expect_error(MIM(X,Y,1))
+ for(Y in badX)
+  expect_error(MIM(data.frame(A=Y),X$A,1))
 })
 
 test_that("NAs and other quirks are caught",{
@@ -82,4 +92,20 @@ test_that("NAs and other quirks are caught",{
  X<-iris[,"Species",drop=FALSE]
  X[,1]<-as.integer(X[,1]); X[17,1]<-NA
  expect_error(MIM(X,iris$Species,1),"NA values are not allowed")
+})
+
+test_that("CMI scorer throws bad Z size",{
+ expect_error(cmiScores(iris[,-5],iris[,5],1:10),"Z vector size mismatch")
+})
+
+test_that("CMI C code throws on bad mode",{
+ expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,9L,0L),"Invalid mode")
+ expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,(791:792),0L),"Invalid mode")
+ expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,-7.3,0L))
+})
+
+test_that("threads argument is processed well",{
+ expect_error(miScores(iris[,-5],iris[,5],-17L),"Invalid threads argument")
+ expect_error(miScores(iris[,-5],iris[,5],NA),"Invalid threads argument")
+ expect_warning(miScores(iris[,-5],iris[,5],1+parallel::detectCores()),"Thread count capped")
 })
