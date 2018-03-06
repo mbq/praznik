@@ -31,7 +31,7 @@ SEXP C_cmi_jmi(SEXP X,SEXP Y,SEXP Z,SEXP Mode,SEXP Threads){
 
  #pragma omp parallel num_threads(nt)
  {
-  int tn=omp_get_thread_num(),*cXZ=cXZc+(tn*n),*xz=xzc+(tn*n),nzx;
+  int tn=omp_get_thread_num(),*cXZ=cXZc+(tn*n),*xz=xzc+(tn*n);
   struct ht *ht=hta[tn];
   #pragma omp for
   for(int e=0;e<m;e++){
