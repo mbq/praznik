@@ -1,3 +1,8 @@
+Changes in 4.1:
+ - Fixed code used to auto-cut numerical values into
+ bins; maximal value used to be wrapped to the minimal bin,
+ which was substantially altering results.
+
 Changes in 4.0:
  - MI, CMI, JMI and NJMI feature scorers.
  - Parallelism is now controlled by threads argument.
