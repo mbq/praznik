@@ -2,6 +2,7 @@
 #' \code{NA}s are not allowed.
 #' @param Y Decision attribute; should be given as a factor, but other options are accepted, exactly like for attributes.
 #' \code{NA}s are not allowed.
+#' @param threads Number of threads to use; default value, 0, means all available to OpenMP.
 #' @note The method requires input to be discrete to use empirical estimators of distribution, and, consequently, information gain or entropy.
 #' To allow smoother user experience, praznik automatically coerces non-factor vectors in \code{X} and \code{Y}, which requires additional time and space and may yield confusing results -- the best practice is to convert data to factors prior to feeding them in this function.
 #' Real attributes are cut into about 10 equally-spaced bins, following the heuristic often used in literature.

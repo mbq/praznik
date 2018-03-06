@@ -4,7 +4,7 @@
 \alias{jmiScores}
 \title{Calculate joint mutual information of all features}
 \usage{
-jmiScores(X, Y, Z)
+jmiScores(X, Y, Z, threads = 0)
 }
 \arguments{
 \item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo automatic categorisation; see below for details).
@@ -14,6 +14,8 @@ jmiScores(X, Y, Z)
 \code{NA}s are not allowed.}
 
 \item{Z}{Other vector; should be given as a factor, but other options are accepted, as for attributes.}
+
+\item{threads}{Number of threads to use; default value, 0, means all available to OpenMP.}
 }
 \value{
 A numerical vector with joint mutual information scores, with names copied from \code{X}.

@@ -74,13 +74,13 @@ NULL
 
 #' Control OpenMP thread count
 #'
-#' The method executes the \code{omp_set_num_threads} function, allowing to override the number of threads spawned by the later executed OpenMP code, including the praznik filters.
-#' By default, all the logical cores will be used, thus this function is only useful to limit this number.
-#' @param threads Number of threads to use.
+#' Does nothing, left to provide warnings to an old code.
+#' @param threads Ignored.
 #' @return Invisible \code{NULL}.
-#' @note This function is the same as provided by the \code{OpenMPController} package.
-#' You can also control OpenMP code by using environment variables, in particular \code{OMP_NUM_THREADS}.
+#' @note Since praznik 4.0, please use \code{threads} argument of particular algorithm function to control how many threads it will use.
 #' @export
-setOmpThreads<-function(threads)
- invisible(.Call(C_setOmpThreads,as.integer(threads)[1]))
+setOmpThreads<-function(threads){
+ warning("setOmpThreads() is deprecated and does nothing; please use the 'threads' argument!")
+ invisible(NULL)
+}
  

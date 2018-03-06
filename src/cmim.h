@@ -1,9 +1,8 @@
 //This is exactly the same as IF, hence the same implementation
-SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
- int n,k,m,ny,*y,*nx,**x;
- int nt=omp_get_max_threads();
- struct ht *hta[nt];
- prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx,nt);
+SEXP C_CMIM(SEXP X,SEXP Y,SEXP K,SEXP Threads){
+ int n,k,m,ny,*y,*nx,**x,nt;
+ struct ht **hta;
+ prepareInput(X,Y,K,Threads,&hta,&n,&m,&k,&y,&ny,&x,&nx,&nt);
 
  double bs=0.,*ms=(double*)R_alloc(sizeof(double),m);
  int bi=0,*cYc,*ctmp;
@@ -23,7 +22,7 @@ SEXP C_CMIM(SEXP X,SEXP Y,SEXP K){
  SEXP Ans; PROTECT(Ans=makeAns(k,&score,&idx));
  score[0]=bs; idx[0]=bi+1;
  
- #pragma omp parallel
+ #pragma omp parallel num_threads(nt)
  for(int e=1;e<ke;e++){
   #pragma omp single
   {

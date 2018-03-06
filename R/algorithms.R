@@ -9,8 +9,8 @@
 #' @examples data(MadelonD)
 #' MIM(MadelonD$X,MadelonD$Y,20)
 #' @export
-MIM<-function(X,Y,k=3)
- .Call(C_MIM,X,Y,as.integer(k))
+MIM<-function(X,Y,k=3,threads=0)
+ .Call(C_MIM,X,Y,as.integer(k),as.integer(threads))
 
 #' Minimal conditional mutual information maximisation filter
 #'
@@ -27,8 +27,8 @@ MIM<-function(X,Y,k=3)
 #' @examples data(MadelonD)
 #' CMIM(MadelonD$X,MadelonD$Y,20)
 #' @export
-CMIM<-function(X,Y,k=3)
- .Call(C_CMIM,X,Y,as.integer(k))
+CMIM<-function(X,Y,k=3,threads=0)
+ .Call(C_CMIM,X,Y,as.integer(k),as.integer(threads))
 
 #' Minimum redundancy maximal relevancy filter
 #'
@@ -43,8 +43,8 @@ CMIM<-function(X,Y,k=3)
 #' @examples data(MadelonD)
 #' MRMR(MadelonD$X,MadelonD$Y,20)
 #' @export
-MRMR<-function(X,Y,k=3)
- .Call(C_MRMR,X,Y,as.integer(k))
+MRMR<-function(X,Y,k=3,threads=0)
+ .Call(C_MRMR,X,Y,as.integer(k),as.integer(threads))
 
 #' Joint mutual information filter
 #'
@@ -60,8 +60,8 @@ MRMR<-function(X,Y,k=3)
 #' @examples data(MadelonD)
 #' JMI(MadelonD$X,MadelonD$Y,20)
 #' @export
-JMI<-function(X,Y,k=3)
- .Call(C_JMI,X,Y,as.integer(k))
+JMI<-function(X,Y,k=3,threads=0)
+ .Call(C_JMI,X,Y,as.integer(k),as.integer(threads))
 
 #' Double input symmetrical relevance filter
 #'
@@ -77,8 +77,8 @@ JMI<-function(X,Y,k=3)
 #' @examples data(MadelonD)
 #' DISR(MadelonD$X,MadelonD$Y,20)
 #' @export
-DISR<-function(X,Y,k=3)
- .Call(C_DISR,X,Y,as.integer(k))
+DISR<-function(X,Y,k=3,threads=0)
+ .Call(C_DISR,X,Y,as.integer(k),as.integer(threads))
 
 #' Minimal joint mutual information maximisation filter
 #'
@@ -94,8 +94,8 @@ DISR<-function(X,Y,k=3)
 #' JMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
-JMIM<-function(X,Y,k=3)
- .Call(C_JMIM,X,Y,as.integer(k))
+JMIM<-function(X,Y,k=3,threads=0)
+ .Call(C_JMIM,X,Y,as.integer(k),as.integer(threads))
 
 #' Minimal normalised joint mutual information maximisation filter
 #'
@@ -112,6 +112,6 @@ JMIM<-function(X,Y,k=3)
 #' NJMIM(MadelonD$X,MadelonD$Y,20)
 #' @references "Feature selection using Joint Mutual Information Maximisation" M. Bennasar, Y. Hicks and R. Setchi, (2015)
 #' @export
-NJMIM<-function(X,Y,k=3)
- .Call(C_NJMIM,X,Y,as.integer(k))
+NJMIM<-function(X,Y,k=3,threads=0)
+ .Call(C_NJMIM,X,Y,as.integer(k),as.integer(threads))
 

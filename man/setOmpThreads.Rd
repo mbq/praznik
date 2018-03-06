@@ -7,16 +7,14 @@
 setOmpThreads(threads)
 }
 \arguments{
-\item{threads}{Number of threads to use.}
+\item{threads}{Ignored.}
 }
 \value{
 Invisible \code{NULL}.
 }
 \description{
-The method executes the \code{omp_set_num_threads} function, allowing to override the number of threads spawned by the later executed OpenMP code, including the praznik filters.
-By default, all the logical cores will be used, thus this function is only useful to limit this number.
+Does nothing, left to provide warnings to an old code.
 }
 \note{
-This function is the same as provided by the \code{OpenMPController} package.
-You can also control OpenMP code by using environment variables, in particular \code{OMP_NUM_THREADS}.
+Since praznik 4.0, please use \code{threads} argument of particular algorithm function to control how many threads it will use.
 }

@@ -4,7 +4,7 @@
 \alias{JMI}
 \title{Joint mutual information filter}
 \usage{
-JMI(X, Y, k = 3)
+JMI(X, Y, k = 3, threads = 0)
 }
 \arguments{
 \item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo automatic categorisation; see below for details).
@@ -15,6 +15,8 @@ JMI(X, Y, k = 3)
 
 \item{k}{Number of attributes to select.
 Must not exceed \code{ncol(X)}.}
+
+\item{threads}{Number of threads to use; default value, 0, means all available to OpenMP.}
 }
 \value{
 A list with two elements: \code{selection}, a vector of indices of the selected features in the selection order, and \code{score}, a vector of corresponding feature scores.
