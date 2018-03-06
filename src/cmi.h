@@ -1,15 +1,14 @@
 enum cmi_jmi_mode {cjmCMI=791,cjmJMI=792,cjmNJMI=793};
 
-SEXP C_cmi_jmi(SEXP X,SEXP Y,SEXP Z,SEXP Mode){
+SEXP C_cmi_jmi(SEXP X,SEXP Y,SEXP Z,SEXP Mode,SEXP Threads){
  if(length(Mode)!=1) error("Invalid mode");
  int mode=INTEGER(Mode)[0];
  if(mode!=cjmCMI && mode!=cjmJMI && mode!=cjmNJMI)
   error("Invalid mode"); 
 
- int nt=omp_get_max_threads();
- int n,m,ny,*y,nz,*z,*nx,**x;
- struct ht *hta[nt];
- prepareInput(X,Y,R_NilValue,hta,&n,&m,NULL,&y,&ny,&x,&nx,nt);
+ int n,m,ny,*y,nz,*z,*nx,**x,nt;
+ struct ht **hta;
+ prepareInput(X,Y,R_NilValue,Threads,&hta,&n,&m,NULL,&y,&ny,&x,&nx,&nt);
 
  if(length(Z)!=n) error("Z vector size mismatch");
  z=convertSEXP(*hta,n,Z,&nz);
@@ -30,7 +29,7 @@ SEXP C_cmi_jmi(SEXP X,SEXP Y,SEXP Z,SEXP Mode){
  SEXP Ans=PROTECT(allocVector(REALSXP,m));
  double *score=REAL(Ans);
 
- #pragma omp parallel
+ #pragma omp parallel num_threads(nt)
  {
   int tn=omp_get_thread_num(),*cXZ=cXZc+(tn*n),*xz=xzc+(tn*n),nzx;
   struct ht *ht=hta[tn];

@@ -84,7 +84,3 @@ SEXP C_getNmi(SEXP A,SEXP B){
  return(Ans);
 }
 
-SEXP C_setOmpThreads(SEXP threads){
- omp_set_num_threads(INTEGER(threads)[0]);
- return(R_NilValue);
-}

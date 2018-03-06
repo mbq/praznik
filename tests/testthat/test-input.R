@@ -94,13 +94,18 @@ test_that("NAs and other quirks are caught",{
  expect_error(MIM(X,iris$Species,1),"NA values are not allowed")
 })
 
-#TODO: CMI scorer reports Z of a different size
 test_that("CMI scorer throws bad Z size",{
  expect_error(cmiScores(iris[,-5],iris[,5],1:10),"Z vector size mismatch")
 })
 
 test_that("CMI C code throws on bad mode",{
- expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,9L),"Invalid mode")
- expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,(791:792)),"Invalid mode")
- expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,-7.3))
+ expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,9L,0L),"Invalid mode")
+ expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,(791:792),0L),"Invalid mode")
+ expect_error(.Call(C_cmi_jmi,NULL,NULL,NULL,-7.3,0L))
+})
+
+test_that("threads argument is processed well",{
+ expect_error(miScores(iris[,-5],iris[,5],-17L),"Invalid threads argument")
+ expect_error(miScores(iris[,-5],iris[,5],NA),"Invalid threads argument")
+ expect_warning(miScores(iris[,-5],iris[,5],1+parallel::detectCores()),"Thread count capped")
 })

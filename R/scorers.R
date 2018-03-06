@@ -9,8 +9,8 @@
 #' @examples
 #' miScores(iris[,-5],iris$Species)
 #' @export
-miScores<-function(X,Y)
- .Call(C_mi,X,Y)
+miScores<-function(X,Y,threads=0)
+ .Call(C_mi,X,Y,as.integer(threads))
 
 #' Calculate conditional mutual information of all features
 #'
@@ -22,8 +22,8 @@ miScores<-function(X,Y)
 #' @examples
 #' cmiScores(iris[,-5],iris$Species,iris$Sepal.Length)
 #' @export
-cmiScores<-function(X,Y,Z)
- .Call(C_cmi_jmi,X,Y,Z,791L)
+cmiScores<-function(X,Y,Z,threads=0)
+ .Call(C_cmi_jmi,X,Y,Z,791L,as.integer(threads))
 
 #' Calculate joint mutual information of all features
 #'
@@ -37,8 +37,8 @@ cmiScores<-function(X,Y,Z)
 #' @examples
 #' jmiScores(iris[,-5],iris$Species,iris$Sepal.Length)
 #' @export
-jmiScores<-function(X,Y,Z)
- .Call(C_cmi_jmi,X,Y,Z,792L)
+jmiScores<-function(X,Y,Z,threads=0)
+ .Call(C_cmi_jmi,X,Y,Z,792L,as.integer(threads))
 
 #' Calculate normalised joint mutual information of all features
 #'
@@ -51,5 +51,5 @@ jmiScores<-function(X,Y,Z)
 #' @examples
 #' njmiScores(iris[,-5],iris$Species,iris$Sepal.Length)
 #' @export
-njmiScores<-function(X,Y,Z)
- .Call(C_cmi_jmi,X,Y,Z,793L)
+njmiScores<-function(X,Y,Z,threads=0)
+ .Call(C_cmi_jmi,X,Y,Z,793L,as.integer(threads))

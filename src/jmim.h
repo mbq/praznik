@@ -1,8 +1,7 @@
-SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
- int nt=omp_get_max_threads();
- int n,k,m,ny,*y,*nx,**x;
- struct ht *hta[nt];
- prepareInput(X,Y,K,hta,&n,&m,&k,&y,&ny,&x,&nx,nt);
+SEXP C_JMIM(SEXP X,SEXP Y,SEXP K,SEXP Threads){
+ int n,k,m,ny,*y,*nx,**x,nt;
+ struct ht **hta;
+ prepareInput(X,Y,K,Threads,&hta,&n,&m,&k,&y,&ny,&x,&nx,&nt);
 
  double bs=0.; int *cY,*ctmp,bi=0;
  initialMiScan(hta,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi,nt);
@@ -26,7 +25,7 @@ SEXP C_JMIM(SEXP X,SEXP Y,SEXP K){
  int *wxc=(int*)R_alloc(sizeof(int),n*nt),*cWXc=ctmp,ke=k;
  bs=-INFINITY;
 
- #pragma omp parallel
+ #pragma omp parallel num_threads(nt)
  for(int e=1;e<ke;e++){
   double tbs=-INFINITY;
   int tbi=-1,tn=omp_get_thread_num();

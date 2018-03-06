@@ -4,7 +4,7 @@
 \alias{miScores}
 \title{Calculate mutual information of all features}
 \usage{
-miScores(X, Y)
+miScores(X, Y, threads = 0)
 }
 \arguments{
 \item{X}{Attribute table, given as a data frame with either factors (preferred), booleans, integers (treated as categorical) or reals (which undergo automatic categorisation; see below for details).
@@ -12,6 +12,8 @@ miScores(X, Y)
 
 \item{Y}{Decision attribute; should be given as a factor, but other options are accepted, exactly like for attributes.
 \code{NA}s are not allowed.}
+
+\item{threads}{Number of threads to use; default value, 0, means all available to OpenMP.}
 }
 \value{
 A numerical vector with mutual information scores, with names copied from \code{X}.
