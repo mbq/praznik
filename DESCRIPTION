@@ -1,7 +1,7 @@
 Package: praznik
 Type: Package
 Title: Collection of Information-Based Feature Selection Filters
-Version: 4.0.0
+Version: 4.1.0
 Depends: R (>= 2.10)
 Authors@R: c(
   person(
@@ -20,8 +20,8 @@ RoxygenNote: 6.0.1.9000
 Suggests: testthat
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2018-03-06 12:19:22 UTC; mbq
+Packaged: 2018-03-06 18:36:42 UTC; mbq
 Author: Miron B. Kursa [aut, cre] (<https://orcid.org/0000-0001-7672-648X>)
 Maintainer: Miron B. Kursa <M.Kursa@icm.edu.pl>
 Repository: CRAN
-Date/Publication: 2018-03-06 12:40:00 UTC
+Date/Publication: 2018-03-06 22:49:09 UTC
