@@ -61,7 +61,7 @@ njmiScores<-function(X,Y,Z,threads=0)
 #' @template input
 #' @return A numerical vector with Gini impurity scores, with names copied from \code{X}.
 #' @examples
-#' giniScores(iris[,-5],iris$Species)
+#' impScores(iris[,-5],iris$Species)
 #' @export
 impScores<-function(X,Y,threads=0)
  .Call(C_im,X,Y,as.integer(threads))
