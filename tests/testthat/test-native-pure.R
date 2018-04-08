@@ -58,6 +58,6 @@ test_that("jmi behaves properly",{
   )
 })
 
-test_that("gini behaves properly",{
- expect_equal(giniScores(X,Y),pureGini(X,Y))
+test_that("impurity scores agree with pure",{
+ expect_equal(impScores(X,Y),pureImp(X,Y))
 })

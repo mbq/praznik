@@ -63,5 +63,5 @@ njmiScores<-function(X,Y,Z,threads=0)
 #' @examples
 #' giniScores(iris[,-5],iris$Species)
 #' @export
-giniScores<-function(X,Y,threads=0)
- .Call(C_gi,X,Y,as.integer(threads))
+impScores<-function(X,Y,threads=0)
+ .Call(C_im,X,Y,as.integer(threads))
