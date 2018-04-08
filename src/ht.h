@@ -109,7 +109,7 @@ uint32_t static inline fillHtOne(struct ht *Q,int N,int *in,int *out,int mixOff)
    E[0]=Q->cnt+nAB;
    nAB++;
   }
-  if(out) out[e]=(E[0]-Q->cnt)+mixOff;
+  out[e]=(E[0]-Q->cnt)+mixOff;
  }
  return(nAB);
 }
@@ -144,7 +144,7 @@ double nmiHt(struct ht *Q,int *cA,int *cB){
 //Offset is the sum p_y^2 part which is independent from X,
 // and which one can calculate with giniOffset
 //Warning: Conditional Gini Index does not follow CMI 
-double igHt(struct ht *Q,int *cA,double offset){
+double igHt(struct ht *Q,int *cA,int *cB,int nB){
  double ans=0.,N=Q->N;
  for(int e=0;e<Q->nAB;e++){
   if(!(Q->cnt[e].c)) continue;
@@ -152,12 +152,10 @@ double igHt(struct ht *Q,int *cA,double offset){
    _cA=cA[GET_A(Q->cnt[e].ab)];
   ans+=cAB*cAB/_cA;
  }
- return(ans/N-offset);
+ for(int e=0;e<nB;e++){
+  double _cB=cB[e];
+  ans-=_cB*_cB/N;
+ }
+ return(ans/N);
 }
-double oneMinusGiHt(struct ht *Q){
- double ans=0.,Nsq=(double)Q->N;
- Nsq*=Nsq;
- for(int e=0;Q->nAB;e++)
-  ans+=(double)Q->cnt[e].c/Nsq;
- return(ans);
-}
+

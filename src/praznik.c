@@ -56,7 +56,7 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_MRMR,4),
  CALLDEF(C_mi,3),
  CALLDEF(C_cmi_jmi,5),
- CALLDEF(C_ig,3),
+ CALLDEF(C_gi,3),
  {NULL,NULL,0}
 };
 

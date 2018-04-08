@@ -24,7 +24,7 @@ SEXP C_mi(SEXP X,SEXP Y,SEXP Threads){
  return(Ans);
 }
 
-SEXP C_ig(SEXP X,SEXP Y,SEXP Threads){
+SEXP C_gi(SEXP X,SEXP Y,SEXP Threads){
  int n,m,ny,*y,*nx,**x,nt;
  struct ht **hta;
  prepareInput(X,Y,R_NilValue,Threads,&hta,&n,&m,NULL,&y,&ny,&x,&nx,&nt);
@@ -33,17 +33,14 @@ SEXP C_ig(SEXP X,SEXP Y,SEXP Threads){
  SEXP Ans=PROTECT(allocVector(REALSXP,m));
  double *score=REAL(Ans);
 
- //fillHtOne(*hta,n,y,NULL,0);
- double offset=0.;//oneMinusGiHt(*hta);
-
  #pragma omp parallel num_threads(nt)
  {
   int tn=omp_get_thread_num(),*cX=cXc+(tn*n),*cY=cYc+(tn*n),dy=0;
   struct ht *ht=hta[tn];
   #pragma omp for
   for(int e=0;e<m;e++){
-   fillHt(ht,n,ny,y,nx[e],x[e],NULL,dy?NULL:cY,cX,0); dy=1;
-   score[e]=igHt(ht,cY,offset);
+   fillHt(ht,n,nx[e],x[e],ny,y,NULL,cX,dy?NULL:cY,0); dy=1;
+   score[e]=igHt(ht,cX,cY,ny);
   }
  }
  //Copy attribute names
