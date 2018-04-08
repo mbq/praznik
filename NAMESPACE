@@ -2,6 +2,7 @@
 
 export(CMIM)
 export(DISR)
+export(JIM)
 export(JMI)
 export(JMIM)
 export(MIM)

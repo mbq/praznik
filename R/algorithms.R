@@ -115,3 +115,21 @@ JMIM<-function(X,Y,k=3,threads=0)
 NJMIM<-function(X,Y,k=3,threads=0)
  .Call(C_NJMIM,X,Y,as.integer(k),as.integer(threads))
 
+#' Joint impurity filter
+#'
+#' The method starts with an attribute of a maximal impurity gain with the decision \eqn{Y}.
+#' Then, it greedily adds attribute \eqn{X} with a maximal value of the following criterion:
+#' \deqn{J(X)=\sum_{W\in S} G(X,W;Y),}
+#' where \eqn{S} is the set of already selected attributes, and
+#' \deqn{G(X;Y)=\sum_{xy}\frac{p_{xy}^2}{p_x}-\sum_{y} p_y^2}
+#' is the Gini impurity gain from partitioning \eqn{Y} according to \eqn{X}.
+#' @note This is an impurity-based version of \code{\link{JMI}}; expect similar results in slightly shorter time.
+#' @template input
+#' @template k
+#' @template output
+#' @examples data(MadelonD)
+#' JIM(MadelonD$X,MadelonD$Y,20)
+#' @export
+JIM<-function(X,Y,k=3,threads=0)
+ .Call(C_JIM,X,Y,as.integer(k),as.integer(threads))
+

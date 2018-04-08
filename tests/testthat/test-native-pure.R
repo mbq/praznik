@@ -61,3 +61,10 @@ test_that("jmi behaves properly",{
 test_that("impurity scores agree with pure",{
  expect_equal(impScores(X,Y),pureImp(X,Y))
 })
+
+#TODO: Write a proper pure version
+test_that("JIM works",{
+ data(MadelonD)
+ JIM(MadelonD$X,MadelonD$Y,20)->ans
+ expect_true(all(grepl("^Rel",names(ans$selection))))
+})
