@@ -121,7 +121,7 @@ void static inline initialMiScan(struct ht **hta,int n,int m,int *y,int ny,int *
    }
   }
   #pragma omp critical
-  if(tbs>*bs){
+  if((tbs>*bs) || (tbs==*bs && tbi<*bi)){
    *bs=tbs;
    *bi=tbi;
   }
@@ -149,7 +149,7 @@ void static inline initialImScan(struct ht **hta,int n,int m,int *y,int ny,int *
    }
   }
   #pragma omp critical
-  if(tbs>*bs){
+  if((tbs>*bs) || (tbs==*bs && tbi<*bi)){
    *bs=tbs;
    *bi=tbi;
   }
