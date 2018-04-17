@@ -178,3 +178,10 @@ pureDISR<-function(X,Y,k=3){
  )
 }
 
+pureImp<-function(X,Y){
+ gi<-function(X,Y){
+  k<-(k<-table(X,Y))/sum(k)
+  sum(k^2/rowSums(k))-sum(colSums(k)^2)
+ }
+ apply(X,2,gi,Y)
+}

@@ -31,10 +31,15 @@
 #include "jmim.h"
 #include "njmim.h"
 
+//Gini impurity based
+
+#include "jim.h"
+
 //Feature scoring algorithms
 
 #include "mi.h"
 #include "cmi.h"
+#include "im.h"
 
 //Auxiliary
 
@@ -56,6 +61,8 @@ static const R_CallMethodDef R_CallDef[]={
  CALLDEF(C_MRMR,4),
  CALLDEF(C_mi,3),
  CALLDEF(C_cmi_jmi,5),
+ CALLDEF(C_im,3),
+ CALLDEF(C_JIM,4),
  {NULL,NULL,0}
 };
 
