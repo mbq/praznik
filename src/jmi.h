@@ -44,7 +44,7 @@ SEXP C_JMI(SEXP X,SEXP Y,SEXP K,SEXP Threads){
    }
   }
   #pragma omp critical
-  if(tbs>bs){
+  if((tbs>bs) || (tbs==bs && tbi<bi)){
    bs=tbs;
    bi=tbi;
   }

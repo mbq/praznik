@@ -62,6 +62,15 @@ test_that("impurity scores agree with pure",{
  expect_equal(impScores(X,Y),pureImp(X,Y))
 })
 
+test_that("multithread tie breaking is stable",{
+ mets<-c(MIM,JMIM,NJMIM,JMI,DISR,CMIM,MRMR,JIM)
+ for(met in mets)
+  expect_equal(
+   met(iris[,rep(1:4,10)],iris$Species,threads=8),
+   met(iris[,rep(1:4,10)],iris$Species,threads=1)
+  )
+})
+
 #TODO: Write a proper pure version
 test_that("JIM works",{
  data(MadelonD)
