@@ -53,3 +53,15 @@ jmiScores<-function(X,Y,Z,threads=0)
 #' @export
 njmiScores<-function(X,Y,Z,threads=0)
  .Call(C_cmi_jmi,X,Y,Z,793L,as.integer(threads))
+
+#' Calculate Gini impurity scores of all features
+#'
+#' Calculates Gini impurity between each attribute and the decision, that is
+#' \deqn{G(X;Y)=\sum_{xy} \frac{p_{xy}^2}{p_x}-\sum_y p_y^2.}
+#' @template input
+#' @return A numerical vector with Gini impurity scores, with names copied from \code{X}.
+#' @examples
+#' impScores(iris[,-5],iris$Species)
+#' @export
+impScores<-function(X,Y,threads=0)
+ .Call(C_im,X,Y,as.integer(threads))

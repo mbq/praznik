@@ -1,3 +1,11 @@
+Changes in 5.0:
+ - JIM algorithm as an alternative version of JMI which
+ is using Gini impurity instead of information gain.
+ - Gini impurity feature scorer.
+ - Fixed instability in breaking ties between equivalent
+ features in multi-threaded case. Now, feature of a lowest
+ index is always returned.
+
 Changes in 4.1:
  - Fixed code used to auto-cut numerical values into
  bins; maximal value used to be wrapped to the minimal bin,

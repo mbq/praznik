@@ -140,3 +140,36 @@ double nmiHt(struct ht *Q,int *cA,int *cB){
  return(I/H);
 }
 
+//Impurity is calculated in two parts,
+// p_xy^2/p_x^2 ~ x and constant p_y^2 ...
+double imHt(struct ht *Q,int *cA){
+ double ans=0.,N=Q->N;
+ for(int e=0;e<Q->nAB;e++){
+  if(!(Q->cnt[e].c)) continue;
+  double cAB=Q->cnt[e].c,
+   _cA=cA[GET_A(Q->cnt[e].ab)];
+  ans+=cAB*cAB/_cA;
+ }
+ return(ans/N);
+}
+//...here
+double imOff(int *cB,int nB,int N){
+ double ans=0.;
+ for(int e=0;e<nB;e++){
+  double pa=((double)cB[e])/((double)N);
+  ans+=pa*pa;
+ }
+ return(ans);
+}
+//...or here, if one only has a raw y vector
+double imOffRaw(struct ht *Q,int N,int *b,int nb){
+ double ans=0.;
+ for(int e=0;e<nb;e++) Q->cnt[e].c=0;
+ for(int e=0;e<N;e++) Q->cnt[b[e]-1].c++;
+ for(int e=0;e<nb;e++){
+  double pa=((double)Q->cnt[e].c)/((double)N);
+  ans+=pa*pa;
+ }
+ return(ans);
+}
+

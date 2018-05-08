@@ -121,7 +121,35 @@ void static inline initialMiScan(struct ht **hta,int n,int m,int *y,int ny,int *
    }
   }
   #pragma omp critical
-  if(tbs>*bs){
+  if((tbs>*bs) || (tbs==*bs && tbi<*bi)){
+   *bs=tbs;
+   *bi=tbi;
+  }
+ }
+}
+
+void static inline initialImScan(struct ht **hta,int n,int m,int *y,int ny,int **x,int *nx,int **_cX,double *_im,double *bs,int *bi,int nt,double *_yoff){
+ int *cXc=(int*)R_alloc(sizeof(int),n*nt); if(_cX) *_cX=cXc;
+
+ for(int e=0;e<ny;e++) cXc[e]=0;
+ for(int e=0;e<n;e++) cXc[y[e]-1]++;
+ double off=imOff(cXc,ny,n); if(_yoff) *_yoff=off;
+ 
+ #pragma omp parallel num_threads(nt)
+ {
+  double tbs=0.;
+  int tn=omp_get_thread_num(),*cX=cXc+(tn*n),tbi=-1;
+  struct ht *ht=hta[tn]; 
+  #pragma omp for
+  for(int e=0;e<m;e++){
+   fillHt(ht,n,nx[e],x[e],ny,y,NULL,cX,NULL,0); 
+   double im=imHt(ht,cX)-off; _im?_im[e]=im:0;
+   if(im>tbs){
+    tbs=im; tbi=e;
+   }
+  }
+  #pragma omp critical
+  if((tbs>*bs) || (tbs==*bs && tbi<*bi)){
    *bs=tbs;
    *bi=tbi;
   }

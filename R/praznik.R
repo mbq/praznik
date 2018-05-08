@@ -48,7 +48,16 @@
 #' \deqn{\frac{I(X,Z;Y)}{H(X,Y,Z)}.}
 #'
 #' Estimation of mutual information and its generalisations is a hard task; still, praznik aims at speed and simplicity and hence only offers basic, maximum likelihood estimator applicable on discrete data.
-#' For convenience, praznik automatically and silently coerces non-factor inputs into about equally-spaced bins, following the heuristic often used in literature.
+#' For convenience, praznik automatically and silently coerces non-factor inputs into about ten equally-spaced bins, following the heuristic often used in literature.
+#'
+#' Additionally, praznik has a limited, experimental support for replacing entropic statistics with Gini impurity-based; in such framework, entropy is replaced by Gini impurity
+#' \deqn{g(X):=1-\sum_x p_x^2,}
+#' which leads to an impurity gain
+#' \deqn{G(X;Y):=g(Y)-E(g(Y)|X)=\sum_{xy}\frac{p_{xy}^2}{p_x}-\sum_{y} p_y^2,}
+#' a counterpart of mutual information or information gain.
+#' It does not possess most of elegant properties of mutual information, yet values of both are usually highly correlated; moreover, Gini gain is computationally easier to calculate, hence it often replaces MI in performance-sensitive applications, like optimising splits in decision trees.
+#'
+#' In a present version, praznik includes \code{\link{impScores}} for generating values of \eqn{G} for all features (an analog of \code{\link{miScores}}, as well as \code{\link{JIM}}, a Gini gain-based feature selection method otherwise identical to \code{\link{JMI}}.
 #' @references "Conditional Likelihood Maximisation: A Unifying Framework for Information Theoretic Feature Selection" G. Brown et al. JMLR (2012).
 "_PACKAGE"
 

@@ -1,10 +1,10 @@
-SEXP C_DISR(SEXP X,SEXP Y,SEXP K,SEXP Threads){
+SEXP C_JIM(SEXP X,SEXP Y,SEXP K,SEXP Threads){
  int n,k,m,ny,*y,*nx,**x,nt;
  struct ht **hta;
  prepareInput(X,Y,K,Threads,&hta,&n,&m,&k,&y,&ny,&x,&nx,&nt);
 
- double bs=0.; int *cY,*ctmp,bi=0;
- initialMiScan(hta,n,m,y,ny,x,nx,&cY,&ctmp,NULL,&bs,&bi,nt);
+ double bs=0.,off; int *ctmp,bi=0;
+ initialImScan(hta,n,m,y,ny,x,nx,&ctmp,NULL,&bs,&bi,nt,&off);
  if(bs==0) return(makeAns(0,NULL,NULL));
 
  //Save selected X as W and discard from further consideration
@@ -35,9 +35,9 @@ SEXP C_DISR(SEXP X,SEXP Y,SEXP K,SEXP Threads){
    //Mix x[ee] with lx making wx
    int nwx=fillHt(ht,n,nx[ee],x[ee],nw,w,wx,NULL,NULL,1);
 
-   //Make MI of mix and Y and increase its accumulated score
-   fillHt(ht,n,ny,y,nwx,wx,NULL,NULL,cWX,0); //cY stuff is red.
-   as[ee]+=nmiHt(ht,cY,cWX);
+   //Make IM of mix and Y and increase its accumulated score
+   fillHt(ht,n,nwx,wx,ny,y,NULL,cWX,NULL,0);
+   as[ee]+=imHt(ht,cWX)-off;
 
    if(as[ee]>tbs){
     tbs=as[ee]; tbi=ee;
@@ -59,6 +59,7 @@ SEXP C_DISR(SEXP X,SEXP Y,SEXP K,SEXP Threads){
  }
 
  Ans=finishAns(k,Ans,X);
+
  UNPROTECT(1);
  return(Ans);
 }

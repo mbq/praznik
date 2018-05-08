@@ -58,3 +58,24 @@ test_that("jmi behaves properly",{
   )
 })
 
+test_that("impurity scores agree with pure",{
+ expect_equal(impScores(X,Y),pureImp(X,Y))
+})
+
+test_that("multithread tie breaking is stable",{
+ if(.Machine$sizeof.pointer!=8)
+  skip("Due to numerical issues, this may be violated on 32-bit machines")
+ mets<-c(MIM,JMIM,NJMIM,JMI,DISR,CMIM,MRMR,JIM)
+ for(met in mets)
+  expect_equal(
+   met(iris[,rep(1:4,10)],iris$Species,threads=8),
+   met(iris[,rep(1:4,10)],iris$Species,threads=1)
+  )
+})
+
+test_that("JIM works",{
+ data(MadelonD)
+ JIM(MadelonD$X,MadelonD$Y,20)->ans
+ expect_equal(pureImp(MadelonD$X[ans$selection[1]],MadelonD$Y),ans$score[1])
+ expect_true(all(grepl("^Rel",names(ans$selection))))
+})
