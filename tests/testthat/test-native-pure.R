@@ -71,9 +71,9 @@ test_that("multithread tie breaking is stable",{
   )
 })
 
-#TODO: Write a proper pure version
 test_that("JIM works",{
  data(MadelonD)
  JIM(MadelonD$X,MadelonD$Y,20)->ans
+ expect_equal(pureImp(MadelonD$X[ans$selection[1]],MadelonD$Y),ans$score[1])
  expect_true(all(grepl("^Rel",names(ans$selection))))
 })
