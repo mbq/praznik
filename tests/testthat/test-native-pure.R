@@ -63,6 +63,8 @@ test_that("impurity scores agree with pure",{
 })
 
 test_that("multithread tie breaking is stable",{
+ if(.Machine$sizeof.pointer!=8)
+  skip("Due to numerical issues, this may be violated on 32-bit machines")
  mets<-c(MIM,JMIM,NJMIM,JMI,DISR,CMIM,MRMR,JIM)
  for(met in mets)
   expect_equal(
