@@ -64,7 +64,6 @@ void prepareInput(SEXP X,SEXP Y,SEXP K,SEXP Threads,struct ht ***ht,int *n,int *
  *n=length(Y);
  *m=length(X);
  if(*m==0) error("Cannot select from a data.frame without columns");
- if(n[0]>2147483648) error("Only at most 2^31 (2.1 billion) objects allowed");
  if(*n!=length(VECTOR_ELT(X,0))) error("X and Y size mismatch");
 
  if(k){
