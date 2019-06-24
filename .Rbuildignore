@@ -1,9 +1,0 @@
-man-roxygen
-.git
-.sh$
-^.git.*
-\.o$
-\.so$
-.md
-.travis.yml
-^appveyor\.yml$
